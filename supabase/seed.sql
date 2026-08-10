@@ -1,0 +1,6 @@
+-- Create the DM user in Supabase Dashboard → Authentication → Users
+-- (email + password), or seed via SQL/admin API.
+-- Public signup must stay disabled (Auth settings + local config.toml enable_signup=false).
+-- A profile row is auto-created by the handle_new_user trigger on auth.users insert.
+--
+-- If a bootstrap DM already exists, rotate its password in the Supabase Dashboard.
