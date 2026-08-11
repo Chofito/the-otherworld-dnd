@@ -9,6 +9,7 @@ import {
 } from 'next/font/google';
 import { DEFAULT_THEME_ID } from '@/config/design-themes';
 import { getDictionary, getLocale } from '@/i18n/get-dictionary';
+import { buildPublicMetadata } from '@/lib/site-metadata';
 import './globals.css';
 
 const cinzel = Cinzel({
@@ -52,10 +53,11 @@ const ibmPlex = IBM_Plex_Sans({
 
 export async function generateMetadata(): Promise<Metadata> {
   const dict = await getDictionary();
-  return {
-    title: dict.meta.title,
+  return buildPublicMetadata({
+    title: dict.meta.homeOgTitle,
     description: dict.meta.description,
-  };
+    path: '/',
+  });
 }
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {

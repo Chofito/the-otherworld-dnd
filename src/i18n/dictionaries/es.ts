@@ -4,6 +4,10 @@ const es: Dictionary = {
   meta: {
     title: 'The Otherworld',
     description: 'Club de D&D entre amigos. Invitaciones, campañas y la mesa.',
+    clubTitle: 'Club The Otherworld',
+    inviteOgDescription: 'Te han invitado a jugar la campaña {name}',
+    homeOgTitle: 'Club The Otherworld',
+    summonDmOgDescription: 'Acceso restringido al dungeon master.',
   },
   brand: {
     name: 'The Otherworld',

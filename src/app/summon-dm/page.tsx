@@ -1,8 +1,20 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { loginAction } from '@/app/actions';
 import { ActionForm } from '@/components/action-form';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 import { getDictionary, getLocale } from '@/i18n/get-dictionary';
+import { buildPublicMetadata } from '@/lib/site-metadata';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const dict = await getDictionary();
+  return buildPublicMetadata({
+    title: `${dict.meta.clubTitle} · ${dict.auth.title}`,
+    description: dict.meta.summonDmOgDescription,
+    path: '/summon-dm',
+    noIndex: true,
+  });
+}
 
 export default async function SummonDmPage() {
   const [dict, locale] = await Promise.all([getDictionary(), getLocale()]);

@@ -1,7 +1,18 @@
+import type { Metadata } from 'next';
 import { ChevronDown } from 'lucide-react';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 import { CLUB_ADVENTURES } from '@/config/club-adventures';
 import { getDictionary, getLocale } from '@/i18n/get-dictionary';
+import { buildPublicMetadata } from '@/lib/site-metadata';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const dict = await getDictionary();
+  return buildPublicMetadata({
+    title: dict.meta.homeOgTitle,
+    description: dict.meta.description,
+    path: '/',
+  });
+}
 
 export default async function HomePage() {
   const [dict, locale] = await Promise.all([getDictionary(), getLocale()]);

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -10,6 +11,7 @@ import type { PublicCampaignPagePayload } from '@/lib/invite-types';
 import { rateLimit } from '@/lib/rate-limit';
 import { getClientIp } from '@/lib/request-ip';
 import { createServiceClient } from '@/lib/supabase/service';
+import { buildPublicMetadata, truncateOgText } from '@/lib/site-metadata';
 
 function parsePayload(data: Json | null): PublicCampaignPagePayload | null {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return null;
@@ -53,6 +55,35 @@ function parsePayload(data: Json | null): PublicCampaignPagePayload | null {
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const dict = await getDictionary();
+  const supabase = createServiceClient();
+  const { data, error } = await supabase.rpc('fetch_campaign_page', {
+    p_slug: slug,
+  });
+
+  if (error) {
+    return buildPublicMetadata({
+      title: dict.meta.clubTitle,
+      description: dict.meta.description,
+      path: `/c/${slug}`,
+    });
+  }
+
+  const payload = parsePayload(data);
+  const description = truncateOgText(
+    payload?.campaign.description?.trim() || dict.meta.description,
+  );
+
+  return buildPublicMetadata({
+    title: dict.meta.clubTitle,
+    description,
+    path: `/c/${slug}`,
+  });
+}
 
 export default async function PublicCampaignPage({ params }: Props) {
   const { slug } = await params;

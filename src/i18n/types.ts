@@ -2,6 +2,10 @@ export type Dictionary = {
   meta: {
     title: string;
     description: string;
+    clubTitle: string;
+    inviteOgDescription: string;
+    homeOgTitle: string;
+    summonDmOgDescription: string;
   };
   brand: {
     name: string;

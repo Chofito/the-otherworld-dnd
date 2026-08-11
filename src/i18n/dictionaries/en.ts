@@ -4,6 +4,10 @@ const en: Dictionary = {
   meta: {
     title: 'The Otherworld',
     description: 'A D&D club among friends. Invites, campaigns, and the table.',
+    clubTitle: 'Club The Otherworld',
+    inviteOgDescription: 'You have been invited to play the campaign {name}',
+    homeOgTitle: 'Club The Otherworld',
+    summonDmOgDescription: 'Restricted access for the dungeon master.',
   },
   brand: {
     name: 'The Otherworld',

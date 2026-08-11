@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { submitInviteCharacterAction } from '@/app/actions';
 import { InvitePermalinkView } from '@/components/invite-permalink-view';
@@ -9,6 +10,7 @@ import type { InvitePagePayload } from '@/lib/invite-types';
 import { rateLimit } from '@/lib/rate-limit';
 import { getClientIp } from '@/lib/request-ip';
 import { createServiceClient } from '@/lib/supabase/service';
+import { buildPublicMetadata, truncateOgText } from '@/lib/site-metadata';
 
 function parsePayload(data: Json | null): InvitePagePayload | null {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return null;
@@ -80,6 +82,36 @@ function parsePayload(data: Json | null): InvitePagePayload | null {
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const dict = await getDictionary();
+  const supabase = createServiceClient();
+  const { data, error } = await supabase.rpc('fetch_invite_page', {
+    p_slug: slug,
+  });
+
+  if (error) {
+    return buildPublicMetadata({
+      title: dict.meta.clubTitle,
+      description: dict.meta.description,
+      path: `/i/${slug}`,
+    });
+  }
+
+  const payload = parsePayload(data);
+  const campaignName = payload?.campaign.name?.trim() || dict.meta.title;
+  const description = truncateOgText(
+    dict.meta.inviteOgDescription.replace('{name}', campaignName),
+  );
+
+  return buildPublicMetadata({
+    title: dict.meta.clubTitle,
+    description,
+    path: `/i/${slug}`,
+  });
+}
 
 export default async function InvitePage({ params }: Props) {
   const { slug } = await params;
