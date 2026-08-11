@@ -26,6 +26,7 @@ type Props = {
     status: string;
     maxLevel: string;
     email: string;
+    close: string;
   };
   statusLabels: Dictionary;
 };
@@ -148,6 +149,7 @@ export function InviteSignupFlow({
                 gender: labels.gender,
                 female: labels.female,
                 male: labels.male,
+                close: labels.close,
               }}
             />
             <CatalogSelect

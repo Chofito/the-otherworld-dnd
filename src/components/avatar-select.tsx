@@ -22,7 +22,7 @@ type Props = {
     gender: string;
     female: string;
     male: string;
-    close?: string;
+    close: string;
   };
 };
 
@@ -79,7 +79,7 @@ export function AvatarSelect({
         onClose={() => setOpen(false)}
         size="lg"
         variant="flush"
-        closeLabel={labels?.close}
+        closeLabel={labels?.close ?? 'Cerrar'}
       >
         <div className="avatar-picker">
           <div

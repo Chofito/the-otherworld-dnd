@@ -92,6 +92,7 @@ export default async function InvitePage({ params }: Props) {
     maxLevel: dict.common.maxLevel,
     email: dict.common.email,
     contribution: dict.invite.contribution,
+    close: dict.common.close,
   };
 
   const ip = (await getClientIp()) ?? 'unknown';

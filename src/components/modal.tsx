@@ -24,7 +24,7 @@ export function Modal({
   footer,
   size = 'md',
   variant = 'default',
-  closeLabel = 'Close',
+  closeLabel = 'Cerrar',
 }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
