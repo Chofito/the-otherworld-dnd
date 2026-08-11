@@ -194,6 +194,25 @@ export type Dictionary = {
     inviteNotFound: string;
     campaignFull: string;
     submitFailed: string;
+    invalidProfile: string;
+    updateProfileFailed: string;
+    profileUpdated: string;
+    invalidCampaign: string;
+    createCampaignFailed: string;
+    allocatePublicSlugFailed: string;
+    updateCampaignFailed: string;
+    campaignUpdated: string;
+    invalidTtl: string;
+    noSeatsLeft: string;
+    createInviteFailed: string;
+    allocateInviteSlugFailed: string;
+    inviteCreated: string;
+    invalidCatalogItem: string;
+    catalogNameTaken: string;
+    createCatalogFailed: string;
+    updateCatalogFailed: string;
+    catalogCreated: string;
+    catalogUpdated: string;
   };
   publicCampaign: {
     eyebrow: string;

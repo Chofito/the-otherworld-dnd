@@ -58,10 +58,11 @@ export async function updateProfileAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const dict = await getDictionary();
   const { supabase, userId } = await requireUser();
   const parsed = profileFormSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) {
-    return { error: 'Check display name, fictional name, bio, and avatar.' };
+    return { error: dict.errors.invalidProfile };
   }
 
   const { error } = await supabase
@@ -75,20 +76,21 @@ export async function updateProfileAction(
     .eq('id', userId);
 
   if (error) {
-    return { error: 'Could not update profile.' };
+    return { error: dict.errors.updateProfileFailed };
   }
 
-  return { success: 'Profile updated.' };
+  return { success: dict.errors.profileUpdated };
 }
 
 export async function createCampaignAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const dict = await getDictionary();
   const { supabase, userId } = await requireUser();
   const parsed = campaignFormSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) {
-    return { error: 'Invalid campaign data.' };
+    return { error: dict.errors.invalidCampaign };
   }
 
   const maxAttempts = 8;
@@ -116,11 +118,11 @@ export async function createCampaignAction(
     }
 
     if (error?.code !== '23505') {
-      return { error: 'Could not create campaign.' };
+      return { error: dict.errors.createCampaignFailed };
     }
   }
 
-  return { error: 'Could not allocate public campaign slug.' };
+  return { error: dict.errors.allocatePublicSlugFailed };
 }
 
 export async function updateCampaignAction(
@@ -128,10 +130,11 @@ export async function updateCampaignAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const dict = await getDictionary();
   const { supabase } = await requireUser();
   const parsed = campaignFormSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) {
-    return { error: 'Invalid campaign data.' };
+    return { error: dict.errors.invalidCampaign };
   }
 
   const { error } = await supabase
@@ -149,11 +152,11 @@ export async function updateCampaignAction(
     .eq('id', campaignId);
 
   if (error) {
-    return { error: 'Could not update campaign.' };
+    return { error: dict.errors.updateCampaignFailed };
   }
 
   revalidatePath(`/dashboard/campaigns/${campaignId}`);
-  return { success: 'Campaign updated.' };
+  return { success: dict.errors.campaignUpdated };
 }
 
 export async function deleteCampaignAction(campaignId: string) {
@@ -173,10 +176,11 @@ export async function createInviteAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const dict = await getDictionary();
   const { supabase } = await requireUser();
   const parsed = inviteTtlSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) {
-    return { error: 'Invalid TTL.' };
+    return { error: dict.errors.invalidTtl };
   }
 
   const { data: campaign } = await supabase
@@ -186,7 +190,7 @@ export async function createInviteAction(
     .single();
 
   if (!campaign) {
-    return { error: 'Campaign not found.' };
+    return { error: dict.errors.campaignNotFound };
   }
 
   const [{ count: seatsTaken }, { count: pendingInvites }] = await Promise.all([
@@ -204,8 +208,7 @@ export async function createInviteAction(
   const occupied = (seatsTaken ?? 0) + (pendingInvites ?? 0);
   if (occupied >= campaign.max_players) {
     return {
-      error:
-        'No seats left. Delete a pending invite or a character, or raise max players.',
+      error: dict.errors.noSeatsLeft,
     };
   }
 
@@ -224,16 +227,16 @@ export async function createInviteAction(
 
     if (!error) {
       revalidatePath(`/dashboard/campaigns/${campaignId}`);
-      return { success: 'Invite created.' };
+      return { success: dict.errors.inviteCreated };
     }
 
     // Unique violation on slug: retry without a pre-SELECT.
     if (error.code !== '23505') {
-      return { error: 'Could not create invite.' };
+      return { error: dict.errors.createInviteFailed };
     }
   }
 
-  return { error: 'Could not allocate invite slug.' };
+  return { error: dict.errors.allocateInviteSlugFailed };
 }
 
 export async function revokeInviteAction(inviteId: string, campaignId: string) {
@@ -456,10 +459,11 @@ async function createCatalogItem(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const dict = await getDictionary();
   const { supabase, userId } = await requireUser();
   const parsed = catalogItemFormSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) {
-    return { error: 'Check name and fields.' };
+    return { error: dict.errors.invalidCatalogItem };
   }
 
   const { error } = await supabase.from(table).insert({
@@ -472,13 +476,13 @@ async function createCatalogItem(
 
   if (error) {
     if (error.code === '23505') {
-      return { error: 'That name already exists.' };
+      return { error: dict.errors.catalogNameTaken };
     }
-    return { error: 'Could not create item.' };
+    return { error: dict.errors.createCatalogFailed };
   }
 
   revalidatePath(revalidatePathname);
-  return { success: 'Created.' };
+  return { success: dict.errors.catalogCreated };
 }
 
 async function updateCatalogItem(
@@ -488,10 +492,11 @@ async function updateCatalogItem(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const dict = await getDictionary();
   const { supabase, userId } = await requireUser();
   const parsed = catalogItemFormSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) {
-    return { error: 'Check name and fields.' };
+    return { error: dict.errors.invalidCatalogItem };
   }
 
   const { error } = await supabase
@@ -507,13 +512,13 @@ async function updateCatalogItem(
 
   if (error) {
     if (error.code === '23505') {
-      return { error: 'That name already exists.' };
+      return { error: dict.errors.catalogNameTaken };
     }
-    return { error: 'Could not update item.' };
+    return { error: dict.errors.updateCatalogFailed };
   }
 
   revalidatePath(revalidatePathname);
-  return { success: 'Updated.' };
+  return { success: dict.errors.catalogUpdated };
 }
 
 async function deleteCatalogItem(

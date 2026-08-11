@@ -127,20 +127,11 @@ export function InviteSignupFlow({
 
       {step === 2 ? (
         <section className="stack" aria-labelledby="invite-form-title">
-          <div className="row" style={{ justifyContent: 'space-between' }}>
-            <div className="stack" style={{ gap: '0.2rem' }}>
-              <h1 id="invite-form-title" className="title-arc">
-                {labels.yourCharacter}
-              </h1>
-              <p className="muted">{campaign.name}</p>
-            </div>
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={() => setStep(1)}
-            >
-              {labels.backCampaign}
-            </button>
+          <div className="stack" style={{ gap: '0.2rem' }}>
+            <h1 id="invite-form-title" className="title-arc">
+              {labels.yourCharacter}
+            </h1>
+            <p className="muted">{campaign.name}</p>
           </div>
 
           <ActionForm action={submitAction} className="stack panel">
