@@ -1593,6 +1593,7 @@ button.waymarks__item:hover {
 .summons__lede {
   color: color-mix(in srgb, var(--foreground) 82%, var(--muted));
   max-width: 56ch;
+  white-space: pre-wrap;
 }
 
 .summons__rules {
@@ -1654,6 +1655,7 @@ button.waymarks__item:hover {
   font-size: 1.15rem;
   font-style: italic;
   line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 .plaque__oath strong {
@@ -1710,6 +1712,7 @@ button.waymarks__item:hover {
   max-width: 56ch;
   color: color-mix(in srgb, var(--foreground) 80%, var(--muted));
   font-size: 1.05rem;
+  white-space: pre-wrap;
 }
 
 .saga__facts {
@@ -1793,6 +1796,7 @@ button.waymarks__item:hover {
   color: var(--muted);
   font-size: 0.9rem;
   max-width: 26ch;
+  white-space: pre-wrap;
 }
 
 /* ------------------------------------------------
@@ -1996,6 +2000,7 @@ button.waymarks__item:hover {
   color: var(--muted);
   font-size: 0.95rem;
   line-height: 1.4;
+  white-space: pre-wrap;
 }
 
 .catalog-card__meta {
@@ -2160,6 +2165,7 @@ button.waymarks__item:hover {
   color: var(--muted);
   font-size: 0.92rem;
   line-height: 1.4;
+  white-space: pre-wrap;
 }
 
 .player-card__label {
