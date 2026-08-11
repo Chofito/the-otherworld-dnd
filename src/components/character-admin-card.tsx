@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
 import { ActionForm } from '@/components/action-form';
 import { AvatarSelect } from '@/components/avatar-select';
 import { CatalogSelect } from '@/components/catalog-select';
@@ -26,6 +27,7 @@ export type CharacterCardData = {
   class_id: string | null;
   email: string;
   contribution: string;
+  biography: string;
 };
 
 type Props = {
@@ -34,6 +36,26 @@ type Props = {
   classes: CatalogOption[];
   updateAction: (prev: ActionState, formData: FormData) => Promise<ActionState>;
   deleteAction: () => void | Promise<void>;
+  labels: {
+    edit: string;
+    delete: string;
+    save: string;
+    cancel: string;
+    close: string;
+    characterName: string;
+    race: string;
+    class: string;
+    email: string;
+    contribution: string;
+    biography: string;
+    chooseAvatar: string;
+    selectPortrait: string;
+    gender: string;
+    female: string;
+    male: string;
+    selectOption: string;
+    noOptions: string;
+  };
 };
 
 export function CharacterAdminCard({
@@ -42,9 +64,11 @@ export function CharacterAdminCard({
   classes,
   updateAction,
   deleteAction,
+  labels,
 }: Props) {
   const [editing, setEditing] = useState(false);
   const src = getAvatarSrc(character.image, 'sm');
+  const formId = `character-edit-${character.id}`;
 
   const raceOptions = races.filter(
     (race) => race.is_active !== false || race.id === character.race_id,
@@ -54,10 +78,31 @@ export function CharacterAdminCard({
   );
 
   return (
-    <>
-      <PlayerCard layout="row" size="md" className="card">
+    <div className="admin-card-shell">
+      <PlayerCard layout="stack" size="md" className="card">
+        <PlayerCard.Actions>
+          <button
+            type="button"
+            className="btn-secondary btn-icon"
+            onClick={() => setEditing(true)}
+            aria-label={labels.edit}
+            title={labels.edit}
+          >
+            <Pencil aria-hidden="true" strokeWidth={2} />
+          </button>
+          <form action={deleteAction}>
+            <button
+              type="submit"
+              className="btn-danger btn-icon"
+              aria-label={labels.delete}
+              title={labels.delete}
+            >
+              <Trash2 aria-hidden="true" strokeWidth={2} />
+            </button>
+          </form>
+        </PlayerCard.Actions>
         {src ? (
-          <PlayerCard.Media src={src} alt="" width={72} height={72} />
+          <PlayerCard.Media src={src} alt="" width={96} height={96} />
         ) : (
           <PlayerCard.Slot className="player-card__media-fallback" />
         )}
@@ -67,57 +112,83 @@ export function CharacterAdminCard({
             {character.race} · {character.class}
           </PlayerCard.Meta>
           <PlayerCard.Details>{character.email}</PlayerCard.Details>
+          {character.biography ? (
+            <PlayerCard.Details>
+              <span className="player-card__label">{labels.biography}</span>
+              {character.biography}
+            </PlayerCard.Details>
+          ) : null}
           {character.contribution ? (
-            <PlayerCard.Details className="muted">
+            <PlayerCard.Details>
+              <span className="player-card__label">{labels.contribution}</span>
               {character.contribution}
             </PlayerCard.Details>
           ) : null}
         </PlayerCard.Body>
-        <PlayerCard.Actions>
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={() => setEditing(true)}
-          >
-            Edit
-          </button>
-          <form action={deleteAction}>
-            <button type="submit" className="btn-danger">
-              Delete
-            </button>
-          </form>
-        </PlayerCard.Actions>
       </PlayerCard>
 
       <Modal
         open={editing}
-        title={`Edit ${character.character_name}`}
+        title={`${labels.edit} ${character.character_name}`}
         onClose={() => setEditing(false)}
+        closeLabel={labels.close}
+        footer={
+          <>
+            <button type="submit" className="btn" form={formId}>
+              {labels.save}
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => setEditing(false)}
+            >
+              {labels.cancel}
+            </button>
+          </>
+        }
       >
-        <ActionForm action={updateAction} className="stack">
+        <ActionForm id={formId} action={updateAction} className="stack">
           <label className="field">
-            <span>Character name</span>
+            <span>{labels.characterName}</span>
             <input
               name="character_name"
               required
               defaultValue={character.character_name}
             />
           </label>
-          <AvatarSelect name="image" defaultValue={character.image} />
+          <AvatarSelect
+            name="image"
+            defaultValue={character.image}
+            required
+            labels={{
+              choose: labels.chooseAvatar,
+              title: labels.selectPortrait,
+              gender: labels.gender,
+              female: labels.female,
+              male: labels.male,
+              close: labels.close,
+            }}
+          />
           <CatalogSelect
             name="race_id"
-            label="Race"
+            label={labels.race}
             options={raceOptions}
             defaultValue={character.race_id}
+            required
+            emptyLabel={labels.selectOption}
+            noOptionsLabel={labels.noOptions}
           />
           <CatalogSelect
             name="class_id"
-            label="Class"
+            label={labels.class}
             options={classOptions}
             defaultValue={character.class_id}
+            required
+            emptyLabel={labels.selectOption}
+            noOptionsLabel={labels.noOptions}
           />
           <label className="field">
-            <span>Email</span>
+            <span>{labels.email}</span>
             <input
               type="email"
               name="email"
@@ -126,7 +197,17 @@ export function CharacterAdminCard({
             />
           </label>
           <label className="field">
-            <span>Contribution</span>
+            <span>{labels.biography}</span>
+            <textarea
+              name="biography"
+              required
+              rows={4}
+              maxLength={4000}
+              defaultValue={character.biography}
+            />
+          </label>
+          <label className="field">
+            <span>{labels.contribution}</span>
             <textarea
               name="contribution"
               required
@@ -134,20 +215,8 @@ export function CharacterAdminCard({
               defaultValue={character.contribution}
             />
           </label>
-          <div className="row">
-            <button type="submit" className="btn">
-              Save character
-            </button>
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={() => setEditing(false)}
-            >
-              Cancel
-            </button>
-          </div>
         </ActionForm>
       </Modal>
-    </>
+    </div>
   );
 }

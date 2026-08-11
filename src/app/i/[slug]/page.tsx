@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { submitInviteCharacterAction } from '@/app/actions';
 import { InvitePermalinkView } from '@/components/invite-permalink-view';
 import { InviteSignupFlow } from '@/components/invite-signup-flow';
+import { LocaleSwitcher } from '@/components/locale-switcher';
+import { getDictionary, getLocale } from '@/i18n/get-dictionary';
 import type { Json } from '@/lib/database.types';
 import type { InvitePagePayload } from '@/lib/invite-types';
 import { rateLimit } from '@/lib/rate-limit';
@@ -37,6 +39,7 @@ function parsePayload(data: Json | null): InvitePagePayload | null {
       race_id: (c.race_id as string | null | undefined) ?? null,
       class_id: (c.class_id as string | null | undefined) ?? null,
       contribution: String(c.contribution ?? ''),
+      biography: String(c.biography ?? ''),
     };
   }
 
@@ -80,6 +83,17 @@ type Props = {
 
 export default async function InvitePage({ params }: Props) {
   const { slug } = await params;
+  const [dict, locale] = await Promise.all([getDictionary(), getLocale()]);
+  const inviteLabels = {
+    ...dict.invite,
+    rules: dict.common.rules,
+    seats: dict.common.seats,
+    status: dict.common.status,
+    maxLevel: dict.common.maxLevel,
+    email: dict.common.email,
+    contribution: dict.invite.contribution,
+  };
+
   const ip = (await getClientIp()) ?? 'unknown';
   const limited = rateLimit(`invite-get:${ip}:${slug}`, 60, 60_000);
   if (!limited.ok) {
@@ -95,26 +109,51 @@ export default async function InvitePage({ params }: Props) {
   const payload = parsePayload(data);
   if (!payload) notFound();
 
+  const chrome = (
+    <header className="threshold-bar">
+      <span className="threshold-bar__brand">
+        <span className="sigil" aria-hidden="true" />
+        {dict.brand.name}
+      </span>
+      <LocaleSwitcher
+        locale={locale}
+        label={dict.locale.label}
+        esLabel={dict.locale.es}
+        enLabel={dict.locale.en}
+      />
+    </header>
+  );
+
   // Step 3 forever: completed invite = read-only permalink.
   if (payload.invite.status === 'completed' && payload.character) {
     return (
-      <InvitePermalinkView
-        campaign={payload.campaign}
-        character={payload.character}
-      />
+      <div className="threshold">
+        {chrome}
+        <InvitePermalinkView
+          campaign={payload.campaign}
+          character={payload.character}
+          labels={inviteLabels}
+          statusLabels={dict}
+        />
+      </div>
     );
   }
 
-  // Steps 1–2: pending invite signup flow.
+  // Steps 1-2: pending invite signup flow.
   if (payload.invite.status === 'pending') {
     return (
-      <InviteSignupFlow
-        campaign={payload.campaign}
-        expiresAt={payload.invite.expires_at}
-        races={payload.races ?? []}
-        classes={payload.classes ?? []}
-        submitAction={submitInviteCharacterAction.bind(null, slug)}
-      />
+      <div className="threshold">
+        {chrome}
+        <InviteSignupFlow
+          campaign={payload.campaign}
+          expiresAt={payload.invite.expires_at}
+          races={payload.races ?? []}
+          classes={payload.classes ?? []}
+          submitAction={submitInviteCharacterAction.bind(null, slug)}
+          labels={inviteLabels}
+          statusLabels={dict}
+        />
+      </div>
     );
   }
 

@@ -18,7 +18,7 @@ export type InviteCatalogOption = {
   description: string | null;
 };
 
-/** Public character payload — never includes email. */
+/** Public character payload; never includes email. */
 export type InviteCharacterInfo = {
   id: string;
   character_name: string;
@@ -28,6 +28,7 @@ export type InviteCharacterInfo = {
   race_id?: string | null;
   class_id?: string | null;
   contribution: string;
+  biography: string;
 };
 
 export type InvitePagePayload = {
@@ -52,6 +53,7 @@ export type PublicCampaignPartyMember = {
   class: string;
   role: 'dm' | 'player';
   bio?: string;
+  biography?: string;
 };
 
 export type PublicCampaignPagePayload = {

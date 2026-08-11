@@ -1,6 +1,8 @@
+import Image from 'next/image';
 import Link from 'next/link';
-import { PlayerCard } from '@/components/player-card';
 import { getAvatarSrc } from '@/config/avatars';
+import type { Dictionary } from '@/i18n/types';
+import { campaignStatusLabel } from '@/lib/campaign-status';
 import type {
   InviteCampaignInfo,
   InviteCharacterInfo,
@@ -9,43 +11,71 @@ import type {
 type Props = {
   campaign: InviteCampaignInfo;
   character: InviteCharacterInfo;
+  labels: Dictionary['invite'] & {
+    contribution: string;
+    biography: string;
+    maxLevel: string;
+    status: string;
+  };
+  statusLabels: Dictionary;
 };
 
-export function InvitePermalinkView({ campaign, character }: Props) {
-  const src = getAvatarSrc(character.image, 'sm');
+export function InvitePermalinkView({
+  campaign,
+  character,
+  labels,
+  statusLabels,
+}: Props) {
+  const src = getAvatarSrc(character.image, 'lg');
   const publicHref = campaign.public_slug ? `/c/${campaign.public_slug}` : null;
 
   return (
     <main className="invite-flow">
-      <p className="muted">The Otherworld · tu ficha</p>
-      <header className="invite-flow__header stack">
-        <h1>{campaign.name}</h1>
-        <p>{campaign.description}</p>
-        {publicHref ? (
-          <p>
-            <Link href={publicHref}>Ver página pública de la campaña</Link>
-          </p>
-        ) : null}
-      </header>
+      <p className="eyebrow eyebrow--center">{labels.eyebrowPermalink}</p>
 
-      <PlayerCard layout="stack" size="lg" className="card">
-        {src ? <PlayerCard.Media src={src} alt="" /> : null}
-        <PlayerCard.Body>
-          <PlayerCard.Title>{character.character_name}</PlayerCard.Title>
-          <PlayerCard.Meta>
+      <figure className="plaque">
+        <div className="plaque__door door door--portrait">
+          {src ? (
+            <Image
+              src={src}
+              alt={character.character_name}
+              width={200}
+              height={300}
+            />
+          ) : null}
+        </div>
+        <figcaption className="stack" style={{ gap: '0.9rem' }}>
+          <h1 className="plaque__name title-arc">{character.character_name}</h1>
+          <p className="plaque__lineage">
             {character.race} · {character.class}
-          </PlayerCard.Meta>
-          <PlayerCard.Details>
-            <strong>Contribution:</strong> {character.contribution}
-          </PlayerCard.Details>
-          <PlayerCard.Details className="muted">
-            Max level {campaign.max_level} · Campaign {campaign.status}
-          </PlayerCard.Details>
-        </PlayerCard.Body>
-      </PlayerCard>
+          </p>
+          <blockquote className="plaque__oath">
+            <strong>{labels.biography}</strong>
+            {character.biography}
+          </blockquote>
+          <blockquote className="plaque__oath">
+            <strong>{labels.contribution}</strong>
+            {character.contribution}
+          </blockquote>
+          <p className="plaque__campaign">
+            {campaign.name} · {labels.maxLevel} {campaign.max_level} ·{' '}
+            {labels.status} {campaignStatusLabel(statusLabels, campaign.status)}
+          </p>
+        </figcaption>
+      </figure>
 
-      <p className="muted">
-        Este enlace es permanente. Guárdalo para volver a tu personaje.
+      <span className="ornament" aria-hidden="true">
+        <span className="sigil" />
+      </span>
+
+      <p className="muted" style={{ textAlign: 'center' }}>
+        {labels.permalinkNote}
+        {publicHref ? (
+          <>
+            {' '}
+            <Link href={publicHref}>{labels.publicCampaign}</Link>
+          </>
+        ) : null}
       </p>
     </main>
   );

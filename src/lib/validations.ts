@@ -42,6 +42,7 @@ export const characterFormSchema = z.object({
   class_id: uuidSchema,
   email: z.email().max(254),
   contribution: z.string().trim().min(1).max(2000),
+  biography: z.string().trim().min(1).max(4000),
 });
 
 export const catalogItemFormSchema = z.object({

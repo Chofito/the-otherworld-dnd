@@ -2,11 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { getDictionary } from '@/i18n/get-dictionary';
 import { requireUser } from '@/lib/auth';
 import { rateLimit } from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/request-ip';
 import { createCampaignPublicSlug, createInviteSlug } from '@/lib/slug';
 import { createClient, createLoginClient } from '@/lib/supabase/server';
-import { getClientIp } from '@/lib/request-ip';
 import { createServiceClient } from '@/lib/supabase/service';
 import {
   campaignFormSchema,
@@ -30,9 +31,10 @@ export async function loginAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const dict = await getDictionary();
   const parsed = loginSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) {
-    return { error: 'Invalid email or password.' };
+    return { error: dict.auth.invalid };
   }
 
   const clientIp = await getClientIp();
@@ -40,7 +42,7 @@ export async function loginAction(
   const { error } = await supabase.auth.signInWithPassword(parsed.data);
 
   if (error) {
-    return { error: 'Invalid email or password.' };
+    return { error: dict.auth.invalid };
   }
 
   redirect('/dashboard');
@@ -225,7 +227,7 @@ export async function createInviteAction(
       return { success: 'Invite created.' };
     }
 
-    // Unique violation on slug — retry without a pre-SELECT.
+    // Unique violation on slug: retry without a pre-SELECT.
     if (error.code !== '23505') {
       return { error: 'Could not create invite.' };
     }
@@ -257,9 +259,10 @@ export async function updateCharacterAction(
   formData: FormData,
 ): Promise<ActionState> {
   const { supabase, userId } = await requireUser();
+  const dict = await getDictionary();
   const parsed = characterFormSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) {
-    return { error: 'Invalid character data.' };
+    return { error: dict.errors.invalidCharacter };
   }
 
   const [{ data: race }, { data: characterClass }] = await Promise.all([
@@ -278,7 +281,7 @@ export async function updateCharacterAction(
   ]);
 
   if (!race || !characterClass) {
-    return { error: 'Select a valid race and class.' };
+    return { error: dict.errors.invalidRaceClass };
   }
 
   const { data: existing } = await supabase
@@ -288,7 +291,7 @@ export async function updateCharacterAction(
     .maybeSingle();
 
   if (!existing || existing.campaign_id !== campaignId) {
-    return { error: 'Character not found in this campaign.' };
+    return { error: dict.errors.characterNotFound };
   }
 
   const raceAllowed = race.is_active || existing.race_id === race.id;
@@ -296,7 +299,7 @@ export async function updateCharacterAction(
     characterClass.is_active || existing.class_id === characterClass.id;
 
   if (!raceAllowed || !classAllowed) {
-    return { error: 'Select a valid race and class.' };
+    return { error: dict.errors.invalidRaceClass };
   }
 
   const { data: campaign } = await supabase
@@ -306,7 +309,7 @@ export async function updateCharacterAction(
     .single();
 
   if (!campaign) {
-    return { error: 'Campaign not found.' };
+    return { error: dict.errors.campaignNotFound };
   }
 
   if (!campaign.allow_duplicate_races) {
@@ -317,7 +320,7 @@ export async function updateCharacterAction(
       .eq('race_id', race.id)
       .neq('id', characterId);
     if ((count ?? 0) > 0) {
-      return { error: 'That race is already taken in this campaign.' };
+      return { error: dict.errors.duplicateRace };
     }
   }
 
@@ -329,7 +332,7 @@ export async function updateCharacterAction(
       .eq('class_id', characterClass.id)
       .neq('id', characterId);
     if ((count ?? 0) > 0) {
-      return { error: 'That class is already taken in this campaign.' };
+      return { error: dict.errors.duplicateClass };
     }
   }
 
@@ -344,14 +347,15 @@ export async function updateCharacterAction(
       class_id: characterClass.id,
       email: parsed.data.email.toLowerCase(),
       contribution: parsed.data.contribution,
+      biography: parsed.data.biography,
     })
     .eq('id', characterId);
 
   if (error) {
     if (error.code === '23505') {
-      return { error: 'That email is already used in this campaign.' };
+      return { error: dict.errors.emailTaken };
     }
-    return { error: 'Could not update character.' };
+    return { error: dict.errors.updateCharacterFailed };
   }
 
   redirect(`/dashboard/campaigns/${campaignId}`);
@@ -392,14 +396,15 @@ export async function submitInviteCharacterAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const dict = await getDictionary();
   const limited = rateLimit(`invite-submit:${slug}`, 10, 60_000);
   if (!limited.ok) {
-    return { error: 'Too many attempts. Try again shortly.' };
+    return { error: dict.errors.tooManyAttempts };
   }
 
   const parsed = characterFormSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) {
-    return { error: 'Check the form fields and try again.' };
+    return { error: dict.errors.checkForm };
   }
 
   const supabase = createServiceClient();
@@ -411,32 +416,33 @@ export async function submitInviteCharacterAction(
     p_class_id: parsed.data.class_id,
     p_email: parsed.data.email.toLowerCase(),
     p_contribution: parsed.data.contribution,
+    p_biography: parsed.data.biography,
   });
 
   if (error) {
     const message = error.message ?? '';
     if (message.includes('email_taken')) {
-      return { error: 'That email is already used in this campaign.' };
+      return { error: dict.errors.emailTaken };
     }
     if (message.includes('already_completed')) {
-      return { error: 'This invite was already completed.' };
+      return { error: dict.errors.inviteCompleted };
     }
     if (message.includes('not_found')) {
-      return { error: 'Invite not found.' };
+      return { error: dict.errors.inviteNotFound };
     }
     if (message.includes('invalid_race') || message.includes('invalid_class')) {
-      return { error: 'Select a valid race and class.' };
+      return { error: dict.errors.invalidRaceClass };
     }
     if (message.includes('campaign_full')) {
-      return { error: 'This campaign is full.' };
+      return { error: dict.errors.campaignFull };
     }
     if (message.includes('duplicate_race')) {
-      return { error: 'That race is already taken in this campaign.' };
+      return { error: dict.errors.duplicateRace };
     }
     if (message.includes('duplicate_class')) {
-      return { error: 'That class is already taken in this campaign.' };
+      return { error: dict.errors.duplicateClass };
     }
-    return { error: 'Could not submit character.' };
+    return { error: dict.errors.submitFailed };
   }
 
   redirect(`/i/${slug}`);

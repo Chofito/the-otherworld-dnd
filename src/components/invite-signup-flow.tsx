@@ -1,11 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import type { ActionState } from '@/app/actions';
 import { ActionForm } from '@/components/action-form';
 import { AvatarSelect } from '@/components/avatar-select';
 import { CatalogSelect } from '@/components/catalog-select';
-import type { ActionState } from '@/app/actions';
-import type { InviteCampaignInfo, InviteCatalogOption } from '@/lib/invite-types';
+import type { Dictionary } from '@/i18n/types';
+import { campaignStatusLabel } from '@/lib/campaign-status';
+import type {
+  InviteCampaignInfo,
+  InviteCatalogOption,
+} from '@/lib/invite-types';
 
 type Step = 1 | 2;
 
@@ -15,6 +20,14 @@ type Props = {
   races: InviteCatalogOption[];
   classes: InviteCatalogOption[];
   submitAction: (prev: ActionState, formData: FormData) => Promise<ActionState>;
+  labels: Dictionary['invite'] & {
+    rules: string;
+    seats: string;
+    status: string;
+    maxLevel: string;
+    email: string;
+  };
+  statusLabels: Dictionary;
 };
 
 export function InviteSignupFlow({
@@ -23,121 +36,171 @@ export function InviteSignupFlow({
   races,
   classes,
   submitAction,
+  labels,
+  statusLabels,
 }: Props) {
   const [step, setStep] = useState<Step>(1);
   const catalogReady = races.length > 0 && classes.length > 0;
+  const isFull = (campaign.seats_taken ?? 0) >= campaign.max_players;
 
   return (
     <main className="invite-flow">
-      <p className="muted">The Otherworld · inscripción</p>
+      <p className="eyebrow eyebrow--center">{labels.eyebrowSignup}</p>
 
-      <nav className="invite-steps" aria-label="Pasos de inscripción">
-        <span className={step === 1 ? 'invite-steps__item is-active' : 'invite-steps__item'}>
-          1. Campaña
+      <nav className="waymarks" aria-label={labels.stepCampaign}>
+        {step === 2 ? (
+          <button
+            type="button"
+            className="waymarks__item"
+            onClick={() => setStep(1)}
+          >
+            {labels.stepCampaign}
+          </button>
+        ) : (
+          <span className="waymarks__item is-active">{labels.stepCampaign}</span>
+        )}
+        <span
+          className={step === 2 ? 'waymarks__item is-active' : 'waymarks__item'}
+          aria-current={step === 2 ? 'step' : undefined}
+        >
+          {labels.stepCharacter}
         </span>
-        <span className={step === 2 ? 'invite-steps__item is-active' : 'invite-steps__item'}>
-          2. Personaje
+        <span className="waymarks__item is-locked" aria-disabled="true">
+          {labels.stepSheet}
         </span>
-        <span className="invite-steps__item">3. Tu ficha</span>
       </nav>
 
       {step === 1 ? (
-        <section className="stack card" aria-labelledby="invite-campaign-title">
-          <h1 id="invite-campaign-title">{campaign.name}</h1>
-          <p>{campaign.description}</p>
+        <section className="summons" aria-labelledby="invite-campaign-title">
+          <h1 id="invite-campaign-title" className="summons__title title-arc">
+            {campaign.name}
+          </h1>
+          <p className="summons__lede">{campaign.description}</p>
+
           {campaign.rules ? (
-            <div className="stack">
-              <h2>Rules</h2>
-              <p style={{ whiteSpace: 'pre-wrap' }}>{campaign.rules}</p>
+            <div className="summons__rules">
+              <h2>{labels.rules}</h2>
+              <p>{campaign.rules}</p>
             </div>
           ) : null}
-          <dl className="home__facts">
+
+          <dl className="inscriptions">
             <div>
-              <dt>Max level</dt>
+              <dt>{labels.maxLevel}</dt>
               <dd>{campaign.max_level}</dd>
             </div>
             <div>
-              <dt>Seats</dt>
+              <dt>{labels.seats}</dt>
               <dd>
                 {campaign.seats_taken ?? 0} / {campaign.max_players}
               </dd>
             </div>
             <div>
-              <dt>Status</dt>
-              <dd>{campaign.status}</dd>
+              <dt>{labels.status}</dt>
+              <dd>{campaignStatusLabel(statusLabels, campaign.status)}</dd>
             </div>
             <div>
-              <dt>Invite expires</dt>
-              <dd>{new Date(expiresAt).toLocaleString()}</dd>
+              <dt>{labels.inviteExpires}</dt>
+              <dd>{new Date(expiresAt).toLocaleDateString()}</dd>
             </div>
           </dl>
-          {campaign.public_slug ? (
-            <p>
-              <a href={`/c/${campaign.public_slug}`}>
-                Ver página pública de la campaña
-              </a>
-            </p>
-          ) : null}
-          <button
-            type="button"
-            className="btn"
-            onClick={() => setStep(2)}
-            disabled={
-              !catalogReady ||
-              (campaign.seats_taken ?? 0) >= campaign.max_players
-            }
-          >
-            Continuar a crear personaje
-          </button>
-          {(campaign.seats_taken ?? 0) >= campaign.max_players ? (
-            <p className="form-error">Esta campaña ya está llena.</p>
-          ) : null}
-          {!catalogReady ? (
-            <p className="form-error">
-              El DM aún no configuró razas y clases para esta campaña.
-            </p>
-          ) : null}
+
+          <div className="summons__actions">
+            <button
+              type="button"
+              className="btn"
+              onClick={() => setStep(2)}
+              disabled={!catalogReady || isFull}
+            >
+              {labels.continueCharacter}
+            </button>
+            {isFull ? <p className="form-error">{labels.full}</p> : null}
+            {!catalogReady ? (
+              <p className="form-error">{labels.catalogMissing}</p>
+            ) : null}
+            {campaign.public_slug ? (
+              <a href={`/c/${campaign.public_slug}`}>{labels.publicCampaign}</a>
+            ) : null}
+          </div>
         </section>
       ) : null}
 
       {step === 2 ? (
         <section className="stack" aria-labelledby="invite-form-title">
           <div className="row" style={{ justifyContent: 'space-between' }}>
-            <h1 id="invite-form-title">Tu personaje</h1>
+            <div className="stack" style={{ gap: '0.2rem' }}>
+              <h1 id="invite-form-title" className="title-arc">
+                {labels.yourCharacter}
+              </h1>
+              <p className="muted">{campaign.name}</p>
+            </div>
             <button
               type="button"
               className="btn-secondary"
               onClick={() => setStep(1)}
             >
-              Volver a campaña
+              {labels.backCampaign}
             </button>
           </div>
-          <p className="muted">{campaign.name}</p>
 
-          <ActionForm action={submitAction} className="stack card">
+          <ActionForm action={submitAction} className="stack panel">
             <label className="field">
-              <span>Character name</span>
+              <span>{labels.characterName}</span>
               <input name="character_name" required maxLength={80} />
             </label>
-            <AvatarSelect name="image" />
-            <CatalogSelect name="race_id" label="Race" options={races} />
-            <CatalogSelect name="class_id" label="Class" options={classes} />
+            <AvatarSelect
+              name="image"
+              required
+              labels={{
+                choose: labels.chooseAvatar,
+                title: labels.selectPortrait,
+                gender: labels.gender,
+                female: labels.female,
+                male: labels.male,
+              }}
+            />
+            <CatalogSelect
+              name="race_id"
+              label={labels.race}
+              options={races}
+              required
+              emptyLabel={labels.selectOption}
+              noOptionsLabel={labels.noOptions}
+            />
+            <CatalogSelect
+              name="class_id"
+              label={labels.class}
+              options={classes}
+              required
+              emptyLabel={labels.selectOption}
+              noOptionsLabel={labels.noOptions}
+            />
             <label className="field">
-              <span>Email</span>
+              <span>{labels.email}</span>
               <input type="email" name="email" required maxLength={254} />
             </label>
             <label className="field">
-              <span>Contribution</span>
+              <span>{labels.biography}</span>
+              <textarea
+                name="biography"
+                required
+                rows={5}
+                maxLength={4000}
+                placeholder={labels.biographyPlaceholder}
+              />
+            </label>
+            <label className="field">
+              <span>{labels.contribution}</span>
               <textarea
                 name="contribution"
                 required
                 rows={4}
                 maxLength={2000}
-                placeholder="What are you bringing to the session?"
+                placeholder={labels.contributionPlaceholder}
               />
             </label>
             <button type="submit" className="btn">
-              Enviar y ver mi ficha
+              {labels.submit}
             </button>
           </ActionForm>
         </section>

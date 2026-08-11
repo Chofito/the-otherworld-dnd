@@ -62,6 +62,7 @@ export type Database = {
       };
       characters: {
         Row: {
+          biography: string;
           campaign_id: string;
           character_name: string;
           class: string;
@@ -77,6 +78,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          biography?: string;
           campaign_id: string;
           character_name: string;
           class: string;
@@ -92,6 +94,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          biography?: string;
           campaign_id?: string;
           character_name?: string;
           class?: string;
@@ -284,6 +287,7 @@ export type Database = {
       is_campaign_owner: { Args: { p_campaign_id: string }; Returns: boolean };
       submit_invite_character: {
         Args: {
+          p_biography: string;
           p_character_name: string;
           p_class_id: string;
           p_contribution: string;
