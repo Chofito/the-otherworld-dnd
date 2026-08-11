@@ -16,12 +16,21 @@ type Props = {
   name: string;
   defaultValue?: string;
   required?: boolean;
+  labels?: {
+    choose: string;
+    title: string;
+    gender: string;
+    female: string;
+    male: string;
+    close?: string;
+  };
 };
 
 export function AvatarSelect({
   name,
   defaultValue = DEFAULT_AVATAR_ID,
   required = true,
+  labels,
 }: Props) {
   const initial = getAvatarById(defaultValue)?.id ?? DEFAULT_AVATAR_ID;
   const [value, setValue] = useState(initial);
@@ -59,22 +68,24 @@ export function AvatarSelect({
             className="btn-secondary"
             onClick={() => setOpen(true)}
           >
-            Elegir imagen
+            {labels?.choose ?? 'Choose image'}
           </button>
         </div>
       </div>
 
       <Modal
         open={open}
-        title="Seleccionar portrait"
+        title={labels?.title ?? 'Select portrait'}
         onClose={() => setOpen(false)}
         size="lg"
+        variant="flush"
+        closeLabel={labels?.close}
       >
         <div className="avatar-picker">
           <div
             className="avatar-picker__tabs row"
             role="tablist"
-            aria-label="Género"
+            aria-label={labels?.gender ?? 'Gender'}
           >
             <button
               type="button"
@@ -83,7 +94,7 @@ export function AvatarSelect({
               className={tab === 'female' ? 'btn' : 'btn-secondary'}
               onClick={() => setTab('female')}
             >
-              Femenino
+              {labels?.female ?? 'Female'}
             </button>
             <button
               type="button"
@@ -92,7 +103,7 @@ export function AvatarSelect({
               className={tab === 'male' ? 'btn' : 'btn-secondary'}
               onClick={() => setTab('male')}
             >
-              Masculino
+              {labels?.male ?? 'Male'}
             </button>
           </div>
 

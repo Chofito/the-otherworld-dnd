@@ -11,6 +11,7 @@ type Props = {
   defaultValue?: string | null;
   required?: boolean;
   emptyLabel?: string;
+  noOptionsLabel?: string;
 };
 
 export function CatalogSelect({
@@ -20,6 +21,7 @@ export function CatalogSelect({
   defaultValue,
   required = true,
   emptyLabel = 'Select…',
+  noOptionsLabel = 'No options configured',
 }: Props) {
   return (
     <label className="field">
@@ -31,7 +33,7 @@ export function CatalogSelect({
         disabled={options.length === 0}
       >
         <option value="" disabled>
-          {options.length === 0 ? 'No options configured' : emptyLabel}
+          {options.length === 0 ? noOptionsLabel : emptyLabel}
         </option>
         {options.map((option) => (
           <option key={option.id} value={option.id}>

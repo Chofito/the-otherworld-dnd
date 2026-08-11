@@ -4,10 +4,12 @@ import {
   updateRaceAction,
 } from '@/app/actions';
 import { CatalogManager } from '@/components/catalog-manager';
+import { getDictionary } from '@/i18n/get-dictionary';
 import { requireUser } from '@/lib/auth';
 
 export default async function RacesPage() {
   const { supabase, userId } = await requireUser();
+  const dict = await getDictionary();
   const { data: races } = await supabase
     .from('races')
     .select('id, name, description, is_active, sort_order')
@@ -17,12 +19,29 @@ export default async function RacesPage() {
 
   return (
     <CatalogManager
-      title="Races"
-      description="Catalog shared across all your campaigns. Only active races appear in character forms."
+      title={dict.catalog.racesTitle}
+      description={dict.catalog.racesDescription}
+      labels={{
+        eyebrow: dict.catalog.eyebrow,
+        addNew: dict.catalog.addNew,
+        existing: dict.catalog.existing,
+        name: dict.common.name,
+        description: dict.common.description,
+        sortOrder: dict.common.sortOrder,
+        activeHint: dict.catalog.activeHint,
+        create: dict.common.create,
+        save: dict.common.save,
+        delete: dict.common.delete,
+        empty: dict.catalog.empty,
+        editItem: dict.catalog.editItem,
+        inactive: dict.catalog.inactive,
+        close: dict.common.close,
+        edit: dict.common.edit,
+      }}
       items={races ?? []}
       createAction={createRaceAction}
-      updateAction={(id) => updateRaceAction.bind(null, id)}
-      deleteAction={(id) => deleteRaceAction.bind(null, id)}
+      updateAction={updateRaceAction}
+      deleteAction={deleteRaceAction}
     />
   );
 }

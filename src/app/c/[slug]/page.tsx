@@ -1,7 +1,10 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { PlayerCard } from '@/components/player-card';
+import { LocaleSwitcher } from '@/components/locale-switcher';
 import { getAvatarSrc } from '@/config/avatars';
+import { getDictionary, getLocale } from '@/i18n/get-dictionary';
+import { campaignStatusLabel } from '@/lib/campaign-status';
 import type { Json } from '@/lib/database.types';
 import type { PublicCampaignPagePayload } from '@/lib/invite-types';
 import { rateLimit } from '@/lib/rate-limit';
@@ -41,6 +44,7 @@ function parsePayload(data: Json | null): PublicCampaignPagePayload | null {
         class: String(m.class ?? ''),
         role,
         bio: role === 'dm' ? String(m.bio ?? '') : undefined,
+        biography: role === 'player' ? String(m.biography ?? '') : undefined,
       };
     }),
   };
@@ -52,6 +56,7 @@ type Props = {
 
 export default async function PublicCampaignPage({ params }: Props) {
   const { slug } = await params;
+  const [dict, locale] = await Promise.all([getDictionary(), getLocale()]);
   const ip = (await getClientIp()) ?? 'unknown';
   const limited = rateLimit(`campaign-get:${ip}:${slug}`, 60, 60_000);
   if (!limited.ok) {
@@ -70,79 +75,114 @@ export default async function PublicCampaignPage({ params }: Props) {
   const { campaign, party } = payload;
 
   return (
-    <main className="invite-flow stack">
-      <p className="muted">The Otherworld · campaña pública</p>
-      <header className="stack">
-        <h1>{campaign.name}</h1>
-        <p>{campaign.description}</p>
-        <dl className="home__facts">
+    <main className="saga">
+      <header className="threshold-bar">
+        <Link href="/" className="threshold-bar__brand">
+          <span className="sigil" aria-hidden="true" />
+          {dict.brand.name}
+        </Link>
+        <LocaleSwitcher
+          locale={locale}
+          label={dict.locale.label}
+          esLabel={dict.locale.es}
+          enLabel={dict.locale.en}
+        />
+      </header>
+
+      <section className="saga__hero">
+        <p className="eyebrow eyebrow--center">{dict.publicCampaign.eyebrow}</p>
+        <h1 className="saga__title title-arc">{campaign.name}</h1>
+        <p className="saga__lede">{campaign.description}</p>
+        <dl className="inscriptions saga__facts">
           <div>
-            <dt>Status</dt>
-            <dd>{campaign.status}</dd>
+            <dt>{dict.common.status}</dt>
+            <dd>{campaignStatusLabel(dict, campaign.status)}</dd>
           </div>
           <div>
-            <dt>Players</dt>
+            <dt>{dict.dashboard.players}</dt>
             <dd>
               {campaign.seats_taken ?? 0} / {campaign.max_players}
             </dd>
           </div>
           <div>
-            <dt>Max level</dt>
+            <dt>{dict.common.maxLevel}</dt>
             <dd>{campaign.max_level}</dd>
           </div>
         </dl>
-      </header>
-
-      {campaign.rules ? (
-        <section className="stack card">
-          <h2>Rules</h2>
-          <p style={{ whiteSpace: 'pre-wrap' }}>{campaign.rules}</p>
-        </section>
-      ) : null}
-
-      <section className="stack">
-        <h2>Party</h2>
-        {!party.length ? (
-          <p className="muted">Aún no hay personajes inscritos.</p>
-        ) : (
-          <div className="player-card-list">
-            {party.map((member) => {
-              const src = getAvatarSrc(member.image, 'sm');
-              const meta =
-                member.role === 'dm'
-                  ? 'Dungeon Master'
-                  : `${member.race} · ${member.class}`;
-              return (
-                <PlayerCard
-                  key={member.id}
-                  layout="row"
-                  size="md"
-                  className="card"
-                >
-                  {src ? (
-                    <PlayerCard.Media src={src} alt="" width={72} height={72} />
-                  ) : (
-                    <PlayerCard.Slot className="player-card__media-fallback" />
-                  )}
-                  <PlayerCard.Body>
-                    <PlayerCard.Title>{member.character_name}</PlayerCard.Title>
-                    <PlayerCard.Meta>{meta}</PlayerCard.Meta>
-                    {member.role === 'dm' && member.bio ? (
-                      <PlayerCard.Details className="muted">
-                        {member.bio}
-                      </PlayerCard.Details>
-                    ) : null}
-                  </PlayerCard.Body>
-                </PlayerCard>
-              );
-            })}
-          </div>
-        )}
       </section>
 
-      <p className="muted">
-        <Link href="/">The Otherworld</Link>
-      </p>
+      <div className="saga__body">
+        {campaign.rules ? (
+          <section className="stack">
+            <h2 className="saga__section-title">{dict.common.rules}</h2>
+            <div className="summons__rules">
+              <p>{campaign.rules}</p>
+            </div>
+          </section>
+        ) : null}
+
+        <section className="stack" style={{ gap: '1.75rem' }}>
+          <h2 className="saga__section-title">{dict.common.party}</h2>
+          {!party.length ? (
+            <p className="muted">{dict.publicCampaign.noParty}</p>
+          ) : (
+            <div className="procession">
+              {party.map((member) => {
+                const src = getAvatarSrc(member.image, 'lg');
+                const meta =
+                  member.role === 'dm'
+                    ? dict.publicCampaign.dungeonMaster
+                    : `${member.race} · ${member.class}`;
+                return (
+                  <figure className="procession__member" key={member.id}>
+                    <div
+                      className={
+                        src
+                          ? 'procession__door door door--portrait'
+                          : 'procession__door door door--unlit'
+                      }
+                    >
+                      {src ? (
+                        <Image
+                          src={src}
+                          alt={member.character_name}
+                          width={200}
+                          height={300}
+                        />
+                      ) : (
+                        <span className="sigil" aria-hidden="true" />
+                      )}
+                    </div>
+                    <figcaption className="stack" style={{ gap: '0.25rem' }}>
+                      <span className="procession__name">
+                        {member.character_name}
+                      </span>
+                      <span className="procession__meta">{meta}</span>
+                      {member.role === 'dm' && member.bio ? (
+                        <span className="procession__bio">{member.bio}</span>
+                      ) : null}
+                      {member.role === 'player' && member.biography ? (
+                        <span className="procession__bio">
+                          {member.biography}
+                        </span>
+                      ) : null}
+                    </figcaption>
+                  </figure>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </div>
+
+      <footer className="saga__footer">
+        <span className="ornament" aria-hidden="true">
+          <span className="sigil" />
+        </span>
+        <p className="muted">
+          <Link href="/">{dict.brand.name}</Link>
+        </p>
+      </footer>
     </main>
   );
 }

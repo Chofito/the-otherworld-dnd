@@ -3,10 +3,12 @@ import { updateProfileAction } from '@/app/actions';
 import { ActionForm } from '@/components/action-form';
 import { AvatarSelect } from '@/components/avatar-select';
 import { DEFAULT_AVATAR_ID, getAvatarSrc } from '@/config/avatars';
+import { getDictionary } from '@/i18n/get-dictionary';
 import { requireUser } from '@/lib/auth';
 
 export default async function AccountPage() {
   const { supabase, userId } = await requireUser();
+  const dict = await getDictionary();
   const { data: profile } = await supabase
     .from('profiles')
     .select('display_name, fictional_name, bio, image')
@@ -18,11 +20,9 @@ export default async function AccountPage() {
 
   return (
     <main className="stack" style={{ maxWidth: '28rem' }}>
-      <h1>Account</h1>
-      <p className="muted">
-        Tu perfil de DM. El nombre ficticio y la bio aparecen en el roster
-        público de tus campañas.
-      </p>
+      <p className="home__eyebrow">{dict.account.eyebrow}</p>
+      <h1 className="page-title">{dict.account.title}</h1>
+      <p className="muted">{dict.account.blurb}</p>
       {avatarSrc ? (
         <Image
           src={avatarSrc}
@@ -34,7 +34,7 @@ export default async function AccountPage() {
       ) : null}
       <ActionForm action={updateProfileAction} className="stack card">
         <label className="field">
-          <span>Display name</span>
+          <span>{dict.account.displayName}</span>
           <input
             name="display_name"
             required
@@ -43,30 +43,39 @@ export default async function AccountPage() {
           />
         </label>
         <label className="field">
-          <span>Nombre ficticio</span>
+          <span>{dict.account.fictionalName}</span>
           <input
             name="fictional_name"
             defaultValue={profile?.fictional_name ?? ''}
             maxLength={80}
-            placeholder="Cómo te ven en la mesa"
           />
         </label>
         <label className="field">
-          <span>Bio</span>
+          <span>{dict.account.bio}</span>
           <textarea
             name="bio"
             rows={4}
             maxLength={2000}
             defaultValue={profile?.bio ?? ''}
-            placeholder="Quién eres en el mundo de la campaña"
           />
         </label>
         <div className="field">
-          <span>Image</span>
-          <AvatarSelect name="image" defaultValue={imageId} />
+          <span>{dict.account.avatar}</span>
+          <AvatarSelect
+            name="image"
+            defaultValue={imageId}
+            labels={{
+              choose: dict.invite.chooseAvatar,
+              title: dict.invite.selectPortrait,
+              gender: dict.invite.gender,
+              female: dict.invite.female,
+              male: dict.invite.male,
+              close: dict.common.close,
+            }}
+          />
         </div>
         <button type="submit" className="btn">
-          Save
+          {dict.common.save}
         </button>
       </ActionForm>
     </main>
