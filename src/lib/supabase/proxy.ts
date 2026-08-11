@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
+import { localeCookieName, resolveLocale } from '@/i18n/config';
 import type { Database } from '@/lib/database.types';
 import { requireEnv } from '@/lib/env';
 
@@ -50,6 +51,18 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
     return NextResponse.redirect(url);
+  }
+
+  if (!request.cookies.get(localeCookieName)?.value) {
+    const locale = resolveLocale(
+      undefined,
+      request.headers.get('accept-language'),
+    );
+    supabaseResponse.cookies.set(localeCookieName, locale, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: 'lax',
+    });
   }
 
   return supabaseResponse;

@@ -1,5 +1,7 @@
 # The Otherworld D&D
 
+> **Histórico.** Boceto y decisiones tempranas. Para el alcance actual usa [`docs/product.md`](docs/product.md) y el [`README.md`](README.md).
+
 ## Contexto del proyecto
 
 Este documento resume las conversaciones iniciales y las decisiones de alcance para retomar el proyecto en una nueva sesión desde WSL.

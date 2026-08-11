@@ -27,7 +27,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_7wY0iQm7JD334GZqafS_sQ_33wJj
 # Never expose to the browser. Do not commit.
 SUPABASE_SECRET_KEY=REPLACE_WITH_SB_SECRET
 EOF
-  echo "==> Wrote $ENV_FILE — replace SUPABASE_SECRET_KEY before running"
+  echo "==> Wrote $ENV_FILE - replace SUPABASE_SECRET_KEY before running"
 fi
 
 echo "==> Env keys:"

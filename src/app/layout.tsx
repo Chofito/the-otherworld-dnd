@@ -1,27 +1,71 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import {
+  Cinzel,
+  Cormorant_Garamond,
+  IBM_Plex_Sans,
+  Marcellus,
+  Nunito_Sans,
+  Source_Sans_3,
+} from 'next/font/google';
+import { DEFAULT_THEME_ID } from '@/config/design-themes';
+import { getDictionary, getLocale } from '@/i18n/get-dictionary';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const cinzel = Cinzel({
+  variable: '--font-cinzel',
   subsets: ['latin'],
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const sourceSans = Source_Sans_3({
+  variable: '--font-source-sans',
   subsets: ['latin'],
+  display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: 'The Otherworld',
-  description: 'Invite friends to your first D&D adventure.',
-};
+const cormorant = Cormorant_Garamond({
+  variable: '--font-cormorant',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+const nunito = Nunito_Sans({
+  variable: '--font-nunito',
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+const marcellus = Marcellus({
+  variable: '--font-marcellus',
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+});
+
+const ibmPlex = IBM_Plex_Sans({
+  variable: '--font-ibm-plex',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const dict = await getDictionary();
+  return {
+    title: dict.meta.title,
+    description: dict.meta.description,
+  };
+}
+
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang={locale}
+      data-theme={DEFAULT_THEME_ID}
+      className={`${cinzel.variable} ${sourceSans.variable} ${cormorant.variable} ${nunito.variable} ${marcellus.variable} ${ibmPlex.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

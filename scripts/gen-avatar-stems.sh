@@ -9,7 +9,7 @@ female=$(find public/avatars/Female -type f \( -name '*_lg.png' -o -name '*_lg.j
 male=$(find public/avatars/Male -type f \( -name '*_lg.png' -o -name '*_lg.jpg' \) 2>/dev/null | sed 's|.*/||; s/_lg\..*//' | sort -V | uniq)
 
 {
-  echo '// Auto-generated from public/avatars — do not edit by hand'
+  echo '// Auto-generated from public/avatars - do not edit by hand'
   echo 'export const FEMALE_STEMS = ['
   while IFS= read -r s; do
     [ -n "$s" ] && echo "  '$s',"

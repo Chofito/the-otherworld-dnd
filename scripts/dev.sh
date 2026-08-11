@@ -5,7 +5,7 @@ export PATH="$HOME/.bun/bin:$PATH"
 cd /home/chofito/the-otherworld-dnd
 
 if [ ! -f .env.local ]; then
-  echo "Missing .env.local — run: bash scripts/setup-local.sh"
+  echo "Missing .env.local - run: bash scripts/setup-local.sh"
   exit 1
 fi
 
