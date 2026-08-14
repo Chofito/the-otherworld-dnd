@@ -15,6 +15,12 @@ type Props = {
   className?: string;
 };
 
+type Phase = 'pending' | 'full' | 'clamped';
+
+function FullBio({ text }: { text: string }) {
+  return <pre className="bio-excerpt__full">{text}</pre>;
+}
+
 export function BioExcerpt({
   text,
   name,
@@ -25,7 +31,7 @@ export function BioExcerpt({
 }: Props) {
   const measureRef = useRef<HTMLParagraphElement>(null);
   const [open, setOpen] = useState(false);
-  const [clamped, setClamped] = useState(false);
+  const [phase, setPhase] = useState<Phase>('pending');
 
   useLayoutEffect(() => {
     const el = measureRef.current;
@@ -39,7 +45,7 @@ export function BioExcerpt({
         lineHeight = fontSize * 1.4;
       }
       const lines = el.scrollHeight / lineHeight;
-      setClamped(lines >= MIN_LINES_TO_CLAMP);
+      setPhase(lines >= MIN_LINES_TO_CLAMP ? 'clamped' : 'full');
     };
 
     update();
@@ -49,7 +55,12 @@ export function BioExcerpt({
   }, [text]);
 
   const moreLabel = readMoreLabel.replace('{name}', name);
-  const rootClass = ['bio-excerpt', clamped ? 'is-clamped' : null, className]
+  const rootClass = [
+    'bio-excerpt',
+    phase === 'pending' ? 'is-pending' : null,
+    phase === 'clamped' ? 'is-clamped' : null,
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
 
@@ -63,7 +74,7 @@ export function BioExcerpt({
           {text}
         </p>
         <p className="bio-excerpt__text">{text}</p>
-        {clamped ? (
+        {phase === 'clamped' ? (
           <button
             type="button"
             className="bio-excerpt__more"
@@ -78,8 +89,9 @@ export function BioExcerpt({
         title={`${title} · ${name}`}
         onClose={() => setOpen(false)}
         closeLabel={closeLabel}
+        className="modal--bio"
       >
-        <p className="bio-excerpt__full">{text}</p>
+        <FullBio text={text} />
       </Modal>
     </>
   );

@@ -14,6 +14,7 @@ type ModalProps = {
   size?: ModalSize;
   variant?: ModalVariant;
   closeLabel?: string;
+  className?: string;
 };
 
 export function Modal({
@@ -25,6 +26,7 @@ export function Modal({
   size = 'md',
   variant = 'default',
   closeLabel = 'Cerrar',
+  className,
 }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -49,10 +51,11 @@ export function Modal({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [open, onClose]);
 
-  const className = [
+  const dialogClass = [
     'modal',
     `modal--${size}`,
     variant === 'flush' ? 'modal--flush' : null,
+    className,
   ]
     .filter(Boolean)
     .join(' ');
@@ -60,7 +63,7 @@ export function Modal({
   return (
     <dialog
       ref={dialogRef}
-      className={className}
+      className={dialogClass}
       aria-labelledby={titleId}
       onClose={onClose}
       onCancel={(event) => {

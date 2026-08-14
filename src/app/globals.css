@@ -2085,11 +2085,15 @@ button.waymarks__item:hover {
   white-space: pre-wrap;
 }
 
+.bio-excerpt.is-pending .bio-excerpt__text,
 .bio-excerpt.is-clamped .bio-excerpt__text {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: var(--bio-preview-lines, 6);
   overflow: hidden;
+}
+
+.bio-excerpt.is-clamped .bio-excerpt__text {
   -webkit-mask-image: linear-gradient(
     to bottom,
     #000 0%,
@@ -2121,9 +2125,18 @@ button.waymarks__item:hover {
   text-decoration: underline;
 }
 
+.modal__body > .bio-excerpt__full,
 .bio-excerpt__full {
   margin: 0;
+  display: block;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   line-height: 1.55;
   font-size: 1.02rem;
 }
@@ -2273,7 +2286,10 @@ button.waymarks__item:hover {
    Override UA dialog[open]{display:block} so the panel can flex and
    the body can scroll when content exceeds the viewport.
    Do NOT use :has(.avatar-picker) on body - nested avatar modals live in
-   the DOM and would strip padding from parent edit forms. */
+   the DOM and would strip padding from parent edit forms.
+   Footer-less dialogs (bio read-more) must still cap height: height:auto
+   plus max-height on <dialog> is not a definite flex size, so the body
+   grows with content and overflow-y:auto never engages. */
 dialog.modal {
   border: 1px solid var(--border);
   border-radius: calc(var(--radius) + 0.2rem);
@@ -2283,11 +2299,13 @@ dialog.modal {
   inset: 0;
   width: min(36rem, calc(100vw - 1.25rem));
   max-width: min(36rem, calc(100vw - 1.25rem));
-  max-height: min(88dvh, 44rem);
-  height: auto;
+  max-height: min(88dvh, calc(100dvh - 1.25rem), 44rem);
+  height: fit-content;
+  min-height: 0;
   background: var(--surface);
   color: var(--foreground);
   overflow: hidden;
+  overscroll-behavior: contain;
   box-shadow:
     var(--shadow),
     0 0 0 1px color-mix(in srgb, var(--highlight) 12%, transparent);
@@ -2300,15 +2318,20 @@ dialog.modal[open] {
 
 /* Forms with a real footer need a hard height so the body can scroll. */
 dialog.modal:has(.modal__footer)[open] {
-  height: min(88dvh, 44rem);
-  max-height: min(88dvh, 44rem);
+  height: min(88dvh, calc(100dvh - 1.25rem), 44rem);
+  max-height: min(88dvh, calc(100dvh - 1.25rem), 44rem);
 }
 
 dialog.modal.modal--lg {
   width: min(56rem, calc(100vw - 1.25rem));
   max-width: min(56rem, calc(100vw - 1.25rem));
-  height: min(88dvh, 48rem);
-  max-height: min(88dvh, 48rem);
+  height: min(88dvh, calc(100dvh - 1.25rem), 48rem);
+  max-height: min(88dvh, calc(100dvh - 1.25rem), 48rem);
+}
+
+dialog.modal.modal--bio[open] {
+  height: min(max-content, 88dvh, calc(100dvh - 1.25rem), 44rem);
+  max-height: min(88dvh, calc(100dvh - 1.25rem), 44rem);
 }
 
 .modal::backdrop {
@@ -2321,15 +2344,20 @@ dialog.modal.modal--lg {
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  height: 100%;
-  max-height: 100%;
+  min-width: 0;
   width: 100%;
+  max-height: min(88dvh, calc(100dvh - 1.25rem), 44rem);
   overflow: hidden;
 }
 
 .modal--lg .modal__panel {
   height: 100%;
   max-height: none;
+}
+
+.modal--bio .modal__panel {
+  height: auto;
+  max-height: min(88dvh, calc(100dvh - 1.25rem), 44rem);
 }
 
 .modal__header {
@@ -2345,6 +2373,9 @@ dialog.modal.modal--lg {
     color-mix(in srgb, var(--surface) 88%, transparent)
   );
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .modal__title {
@@ -2369,6 +2400,15 @@ dialog.modal.modal--lg {
   -webkit-overflow-scrolling: touch;
 }
 
+.modal--bio .modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  white-space: pre-wrap;
+}
+
 .modal__body > .stack,
 .modal__body > form.stack {
   gap: 1.15rem;
@@ -2390,6 +2430,37 @@ dialog.modal.modal--lg {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+@media (max-width: 48rem), (max-height: 44rem) {
+  dialog.modal {
+    width: min(36rem, calc(100vw - 0.75rem));
+    max-width: calc(100vw - 0.75rem);
+    max-height: min(92dvh, calc(100dvh - 0.75rem));
+  }
+
+  dialog.modal:has(.modal__footer)[open],
+  dialog.modal.modal--lg {
+    height: min(92dvh, calc(100dvh - 0.75rem));
+    max-height: min(92dvh, calc(100dvh - 0.75rem));
+  }
+
+  dialog.modal.modal--bio[open] {
+    height: min(max-content, 92dvh, calc(100dvh - 0.75rem));
+    max-height: min(92dvh, calc(100dvh - 0.75rem));
+  }
+
+  .modal__panel,
+  .modal--bio .modal__panel {
+    max-height: min(92dvh, calc(100dvh - 0.75rem));
+  }
+
+  .modal__header,
+  .modal__body,
+  .modal__footer {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+  }
 }
 
 .modal h2 {
