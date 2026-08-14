@@ -32,6 +32,7 @@ export type Dictionary = {
     active: string;
     sortOrder: string;
     close: string;
+    readMoreAbout: string;
     link: string;
     expires: string;
     actions: string;

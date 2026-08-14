@@ -125,6 +125,7 @@ export default async function InvitePage({ params }: Props) {
     email: dict.common.email,
     contribution: dict.invite.contribution,
     close: dict.common.close,
+    readMoreAbout: dict.common.readMoreAbout,
   };
 
   const ip = (await getClientIp()) ?? 'unknown';

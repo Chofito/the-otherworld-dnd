@@ -34,6 +34,7 @@ const en: Dictionary = {
     active: 'Active',
     sortOrder: 'Sort order',
     close: 'Close',
+    readMoreAbout: 'Read more about {name}',
     link: 'Link',
     expires: 'Expires',
     actions: 'Actions',

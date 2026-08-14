@@ -5,6 +5,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { ActionForm } from '@/components/action-form';
 import { AvatarSelect } from '@/components/avatar-select';
 import { CatalogSelect } from '@/components/catalog-select';
+import { BioExcerpt } from '@/components/bio-excerpt';
 import { Modal } from '@/components/modal';
 import { PlayerCard } from '@/components/player-card';
 import type { ActionState } from '@/app/actions';
@@ -55,6 +56,7 @@ type Props = {
     male: string;
     selectOption: string;
     noOptions: string;
+    readMoreAbout: string;
   };
 };
 
@@ -115,7 +117,13 @@ export function CharacterAdminCard({
           {character.biography ? (
             <PlayerCard.Details>
               <span className="player-card__label">{labels.biography}</span>
-              {character.biography}
+              <BioExcerpt
+                text={character.biography}
+                name={character.character_name}
+                title={labels.biography}
+                readMoreLabel={labels.readMoreAbout}
+                closeLabel={labels.close}
+              />
             </PlayerCard.Details>
           ) : null}
           {character.contribution ? (

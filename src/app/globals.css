@@ -1796,7 +1796,11 @@ button.waymarks__item:hover {
   color: var(--muted);
   font-size: 0.9rem;
   max-width: 26ch;
-  white-space: pre-wrap;
+  width: 100%;
+}
+
+.procession__bio .bio-excerpt__more {
+  text-align: center;
 }
 
 /* ------------------------------------------------
@@ -2055,6 +2059,79 @@ button.waymarks__item:hover {
 
 .table tbody tr:hover {
   background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+
+/* -- Bio excerpt (clamp + read-more modal) -- */
+.bio-excerpt {
+  position: relative;
+  min-width: 0;
+  white-space: normal;
+}
+
+.bio-excerpt__measure {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  inset-inline: 0;
+  top: 0;
+  margin: 0;
+  white-space: pre-wrap;
+  overflow: hidden;
+}
+
+.bio-excerpt__text {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.bio-excerpt.is-clamped .bio-excerpt__text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--bio-preview-lines, 6);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 58%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 100%);
+}
+
+.bio-excerpt__more {
+  appearance: none;
+  display: inline-block;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--highlight);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  text-align: inherit;
+  max-width: 100%;
+}
+
+.bio-excerpt__more:hover,
+.bio-excerpt__more:focus-visible {
+  text-decoration: underline;
+}
+
+.bio-excerpt__full {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.55;
+  font-size: 1.02rem;
+}
+
+@media (max-width: 40rem) {
+  .bio-excerpt__full {
+    font-size: 0.98rem;
+  }
 }
 
 /* -- Player cards (dashboard admin) -- */

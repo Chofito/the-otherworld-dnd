@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { BioExcerpt } from '@/components/bio-excerpt';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 import { getAvatarSrc } from '@/config/avatars';
 import { getDictionary, getLocale } from '@/i18n/get-dictionary';
@@ -190,12 +191,24 @@ export default async function PublicCampaignPage({ params }: Props) {
                       </span>
                       <span className="procession__meta">{meta}</span>
                       {member.role === 'dm' && member.bio ? (
-                        <span className="procession__bio">{member.bio}</span>
+                        <BioExcerpt
+                          className="procession__bio"
+                          text={member.bio}
+                          name={member.character_name}
+                          title={dict.account.bio}
+                          readMoreLabel={dict.common.readMoreAbout}
+                          closeLabel={dict.common.close}
+                        />
                       ) : null}
                       {member.role === 'player' && member.biography ? (
-                        <span className="procession__bio">
-                          {member.biography}
-                        </span>
+                        <BioExcerpt
+                          className="procession__bio"
+                          text={member.biography}
+                          name={member.character_name}
+                          title={dict.campaignDetail.biography}
+                          readMoreLabel={dict.common.readMoreAbout}
+                          closeLabel={dict.common.close}
+                        />
                       ) : null}
                     </figcaption>
                   </figure>

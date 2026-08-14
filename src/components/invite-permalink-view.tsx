@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { BioExcerpt } from '@/components/bio-excerpt';
 import Link from 'next/link';
 import { getAvatarSrc } from '@/config/avatars';
 import type { Dictionary } from '@/i18n/types';
@@ -16,6 +17,8 @@ type Props = {
     biography: string;
     maxLevel: string;
     status: string;
+    close: string;
+    readMoreAbout: string;
   };
   statusLabels: Dictionary;
 };
@@ -51,7 +54,13 @@ export function InvitePermalinkView({
           </p>
           <blockquote className="plaque__oath">
             <strong>{labels.biography}</strong>
-            {character.biography}
+            <BioExcerpt
+              text={character.biography}
+              name={character.character_name}
+              title={labels.biography}
+              readMoreLabel={labels.readMoreAbout}
+              closeLabel={labels.close}
+            />
           </blockquote>
           <blockquote className="plaque__oath">
             <strong>{labels.contribution}</strong>

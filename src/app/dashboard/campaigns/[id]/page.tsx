@@ -14,6 +14,7 @@ import { ActionForm } from '@/components/action-form';
 import { CampaignDetailTabs } from '@/components/campaign-detail-tabs';
 import { CharacterAdminCard } from '@/components/character-admin-card';
 import { CopyLinkButton } from '@/components/copy-link-button';
+import { BioExcerpt } from '@/components/bio-excerpt';
 import { PlayerCard } from '@/components/player-card';
 import { getAvatarSrc } from '@/config/avatars';
 import { getDictionary } from '@/i18n/get-dictionary';
@@ -100,6 +101,7 @@ export default async function CampaignDetailPage({ params }: Props) {
     male: dict.invite.male,
     selectOption: dict.invite.selectOption,
     noOptions: dict.invite.noOptions,
+    readMoreAbout: dict.common.readMoreAbout,
   };
 
   const settingsPanel = (
@@ -343,7 +345,13 @@ export default async function CampaignDetailPage({ params }: Props) {
                           <span className="player-card__label">
                             {dict.account.bio}
                           </span>
-                          {dmProfile.bio}
+                          <BioExcerpt
+                            text={dmProfile.bio}
+                            name={dmName}
+                            title={dict.account.bio}
+                            readMoreLabel={dict.common.readMoreAbout}
+                            closeLabel={dict.common.close}
+                          />
                         </PlayerCard.Details>
                       ) : null}
                       <PlayerCard.Details>
