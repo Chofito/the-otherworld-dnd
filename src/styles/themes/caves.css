@@ -1,0 +1,237 @@
+/* Theme: The Caves (Caves of Chaos booklet).
+   Ravine rock, bone, embers and the sickly violet of the Cult of Chaos.
+   The door becomes a cave mouth with the Chaos Bell inside; cards are
+   torn parchment; states are goblin chalk marks; dividers are claw marks. */
+
+[data-theme="caves"] {
+  color-scheme: dark;
+
+  --background: #0e0c0b;
+  --ink-deep: #060505;
+  --surface: #191614;
+  --surface-elevated: #221e1b;
+  --foreground: #ece4d6;
+  --muted: #a89c8b;
+  --border: #3d3530;
+  --accent: #d8692a;
+  --accent-fg: #140904;
+  --accent-text: #f0915a;
+  --highlight: #d9a23e;
+  --ember: #d8692a;
+  --danger: #ff6b5e;
+  --ok: #8bd17c;
+  --chaos: #b26ad0;
+  --rock: #5a4d43;
+
+  --star-rgb: 236 228 214;
+  --star-warm-rgb: 216 105 42;
+  --shadow-rgb: 3 2 2;
+  --title-from: #f6efe2;
+  --title-mid: #ece4d6;
+  --title-to: #d9a23e;
+
+  --font-display: var(--font-grenze), "Grenze Gotisch", Georgia, serif;
+  --font-body: var(--font-nunito), "Nunito Sans", system-ui, sans-serif;
+  --display-style: normal;
+  --display-transform: none;
+  --display-tracking: 0.01em;
+
+  --radius: 0.3rem;
+  --arch: 46% 54% 0.3rem 0.3rem / 58% 64% 0.3rem 0.3rem;
+  --torn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,1.2 6,0 13,1.6 21,0.4 30,2 38,0.6 47,1.8 55,0 63,1.4 72,0.3 80,2 89,0.5 100,1.5 100,98.6 93,100 85,98.4 76,99.7 67,98 58,99.6 49,98.2 40,100 31,98.5 22,99.8 13,98.2 5,99.6 0,98.4'/%3E%3C/svg%3E");
+
+  --stars: 0.35;
+  --glow: 1.25;
+  --emblem-caves: block;
+}
+
+/* -- Door: a cave mouth, embers below, chaos above -- */
+[data-theme="caves"] .door {
+  border-color: var(--rock);
+  border-width: 2px;
+  background:
+    radial-gradient(
+      100% 70% at 50% 108%,
+      color-mix(in srgb, var(--ember) calc(22% * var(--glow)), transparent),
+      transparent 65%
+    ),
+    radial-gradient(
+      60% 40% at 50% 45%,
+      color-mix(in srgb, var(--chaos) 12%, transparent),
+      transparent 70%
+    ),
+    color-mix(in srgb, var(--ink-deep) 88%, transparent);
+  box-shadow:
+    0 0 0 6px color-mix(in srgb, var(--rock) 30%, transparent),
+    0 0 40px color-mix(in srgb, var(--ember) 14%, transparent),
+    inset 0 0 60px rgb(var(--shadow-rgb) / 70%);
+}
+
+[data-theme="caves"] .door::before {
+  border: 1px dashed color-mix(in srgb, var(--chaos) 35%, transparent);
+}
+
+[data-theme="caves"] .door::after {
+  background:
+    radial-gradient(
+      45% 28% at 35% 75%,
+      color-mix(in srgb, var(--ember) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      40% 26% at 65% 40%,
+      color-mix(in srgb, var(--chaos) 16%, transparent),
+      transparent 70%
+    );
+}
+
+/* -- Cards: torn parchment, no polished frame -- */
+[data-theme="caves"] :is(.card, .panel, .adventure-card, .ledger__card) {
+  border: 0;
+  border-radius: 0;
+  padding-top: 1.6rem;
+  padding-bottom: 1.6rem;
+  background: linear-gradient(
+    172deg,
+    var(--surface-elevated),
+    var(--surface) 60%,
+    #120f0d
+  );
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rock) 45%, transparent);
+  mask: var(--torn) 0 0 / 100% 100% no-repeat;
+}
+
+[data-theme="caves"] :is(.card, .panel)::before,
+[data-theme="caves"] :is(.card, .panel)::after,
+[data-theme="caves"] .ledger__card::before {
+  display: none;
+}
+
+[data-theme="caves"] .ledger__card:hover {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ember) 55%, transparent),
+    inset 0 -30px 40px -30px color-mix(in srgb, var(--ember) 30%, transparent);
+}
+
+/* -- Buttons: a chipped slab of ember -- */
+[data-theme="caves"] .btn {
+  border: 0;
+  border-radius: 0;
+  clip-path: polygon(2% 0, 100% 8%, 98% 100%, 0 90%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 85%, #fff),
+    color-mix(in srgb, var(--accent) 95%, #000)
+  );
+  box-shadow: none;
+}
+
+/* Clipped buttons cannot show an outline ring; unclip while focused */
+[data-theme="caves"] .btn:focus-visible {
+  clip-path: none;
+}
+
+[data-theme="caves"] .btn-secondary {
+  border-style: dashed;
+  border-color: var(--rock);
+}
+
+/* -- States: chalk scrawls -- */
+[data-theme="caves"] :is(.badge, .adventure-card__status) {
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  padding: 0 0.55rem 0.05rem;
+  border: 1.5px solid currentColor;
+  border-radius: 0.2rem 0.6rem 0.25rem 0.55rem;
+  background: transparent;
+  transform: rotate(-2deg);
+}
+
+[data-theme="caves"] .adventure-card__status {
+  align-self: flex-start;
+  color: var(--accent-text);
+}
+
+[data-theme="caves"] .badge--completed {
+  transform: rotate(1.5deg);
+}
+
+/* -- Sigil: the Chaos Bell -- */
+[data-theme="caves"] .sigil {
+  width: 0.72rem;
+  height: 0.72rem;
+  transform: none;
+  border: 0;
+  background: var(--chaos);
+  box-shadow: none;
+  filter: drop-shadow(
+    0 0 6px color-mix(in srgb, var(--chaos) 65%, transparent)
+  );
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c-1 0-1.5.6-1.5 1.4C7 4.3 5.5 7.5 5.5 11v4L3 18.5h18L18.5 15v-4c0-3.5-1.5-6.7-5-7.6C13.5 2.6 13 2 12 2Zm-2.5 18a2.5 2.5 0 0 0 5 0Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+/* -- Dividers: three claw marks between rock seams -- */
+[data-theme="caves"] .ornament {
+  gap: 0.6rem;
+}
+
+[data-theme="caves"] .ornament::before,
+[data-theme="caves"] .ornament::after {
+  height: 1rem;
+  background:
+    linear-gradient(var(--rock), var(--rock)) center / 100% 1px no-repeat,
+    linear-gradient(
+      115deg,
+      transparent 46%,
+      var(--accent) 47% 53%,
+      transparent 54%
+    )
+    right / 0.7rem 100% no-repeat;
+}
+
+[data-theme="caves"] .ornament::after {
+  background:
+    linear-gradient(var(--rock), var(--rock)) center / 100% 1px no-repeat,
+    linear-gradient(
+      115deg,
+      transparent 46%,
+      var(--accent) 47% 53%,
+      transparent 54%
+    )
+    left / 0.7rem 100% no-repeat;
+}
+
+/* -- Home: the chronicle is scratched into the ravine wall -- */
+[data-theme="caves"] .hero__brand {
+  font-size: clamp(3.4rem, 10vw, 7.4rem);
+  line-height: 0.88;
+  filter: drop-shadow(
+    0 6px 26px color-mix(in srgb, var(--ember) 35%, transparent)
+  );
+}
+
+/* Desktop only: on mobile the lede is centered without a rule */
+@media (min-width: 861px) {
+  [data-theme="caves"] .hero__lede {
+    border-left: 2px solid color-mix(in srgb, var(--ember) 50%, transparent);
+  }
+}
+
+[data-theme="caves"] .chronicle::before {
+  width: 0;
+  border-left: 2px dashed color-mix(in srgb, var(--rock) 80%, transparent);
+  background: none;
+}
+
+/* Blackletter numerals read as runes; carve them in a plain serif */
+[data-theme="caves"] .chapter__numeral {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  color: color-mix(in srgb, var(--foreground) 12%, transparent);
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--ember) 70%, transparent);
+}

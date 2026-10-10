@@ -1,0 +1,58 @@
+/* Reduced-motion overrides. Must be imported last. */
+
+/* -- Motion discipline --
+   Three intentional motions: the entrance rise, the mist
+   inside doors, and the small guiding pulses (cue, waymark).
+   All of them yield to reduced-motion. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body::before,
+  .door::after,
+  .hero__eyebrow,
+  .hero__brand,
+  .hero__lede,
+  .hero__cue,
+  .hero__cue-glyph,
+  .hero__doorframe,
+  .gate__door,
+  .plaque,
+  .saga__title,
+  .waymarks__item.is-active::before,
+  .emblem__flicker,
+  .emblem__glow,
+  .emblem__ripples {
+    animation: none;
+  }
+}
+
+/* Hover motion and eased transitions yield too: state changes stay
+   instant, nothing lifts or slides. */
+@media (prefers-reduced-motion: reduce) {
+  a,
+  .nav a,
+  .btn,
+  .btn-secondary,
+  .btn-danger,
+  .card,
+  .panel,
+  .adventure-card,
+  .ledger__card,
+  .locale-switcher__btn,
+  .avatar-picker__item,
+  .field input,
+  .field textarea,
+  .field select,
+  .waymarks__item::before {
+    transition: none;
+  }
+
+  .btn:hover,
+  .btn-secondary:hover,
+  .btn-danger:hover,
+  .ledger__card:hover {
+    transform: none;
+  }
+}

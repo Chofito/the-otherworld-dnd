@@ -95,6 +95,7 @@ const es: Dictionary = {
     races: 'Razas',
     classes: 'Clases',
     account: 'Cuenta',
+    theme: 'Tema',
   },
   dashboard: {
     eyebrow: 'Panel DM',
@@ -140,7 +141,8 @@ const es: Dictionary = {
     deleteCampaign: 'Eliminar campaña',
     settings: 'Ajustes de campaña',
     publicPage: 'Página pública',
-    publicPageHint: 'Roster público (sin emails). Comparte este enlace con la mesa.',
+    publicPageHint:
+      'Roster público (sin emails). Comparte este enlace con la mesa.',
     invites: 'Invitaciones',
     characters: 'Personajes',
     createInvite: 'Crear invitación',
@@ -211,7 +213,8 @@ const es: Dictionary = {
     profileUpdated: 'Perfil actualizado.',
     invalidCampaign: 'Datos de campaña inválidos.',
     createCampaignFailed: 'No se pudo crear la campaña.',
-    allocatePublicSlugFailed: 'No se pudo asignar el slug público de la campaña.',
+    allocatePublicSlugFailed:
+      'No se pudo asignar el slug público de la campaña.',
     updateCampaignFailed: 'No se pudo actualizar la campaña.',
     campaignUpdated: 'Campaña actualizada.',
     invalidTtl: 'TTL inválido.',
@@ -235,7 +238,8 @@ const es: Dictionary = {
   design: {
     eyebrow: 'Laboratorio de estilo',
     title: 'Diseño',
-    intro: 'Tres direcciones dark-only. Default activo: Arcane Violet.',
+    intro:
+      'Previsualiza cada tema sin cambiar el sitio. Al salir vuelve el tema activo.',
     backDashboard: 'Volver al panel',
     palette: 'Paleta',
     typography: 'Tipografía',
@@ -249,6 +253,47 @@ const es: Dictionary = {
     characterName: 'Nombre del personaje',
     futureArt: 'Contraste para arte futuro',
     futureArtLabel: 'Arte futuro',
+    siteTheme: 'Tema activo del sitio',
+    previewing: 'Previsualizando',
+    atmosphere: 'Atmósfera',
+    mist: 'Niebla',
+    stars: 'Estrellas',
+    grain: 'Grano',
+    glow: 'Vela',
+    reset: 'Restablecer',
+    copyTokens: 'Copiar tokens',
+    copied: 'Copiado',
+  },
+  theme: {
+    eyebrow: 'Panel DM',
+    title: 'Tema del sitio',
+    blurb:
+      'El tema que eliges aquí lo ven todos: home, invitaciones, página pública de campaña y tu panel.',
+    legend: 'Elige un tema',
+    apply: 'Aplicar tema',
+    current: 'Activo',
+    labLink: 'Probar temas en el laboratorio',
+    updated: 'Tema actualizado. Ya lo ve todo el mundo.',
+    updateFailed: 'No se pudo cambiar el tema.',
+    invalid: 'Tema no válido.',
+    names: {
+      arcane: {
+        name: 'The Otherworld',
+        pitch: 'La marca base: noche arcana, violeta y vela.',
+      },
+      keep: {
+        name: 'El Fuerte',
+        pitch: 'Keep on the Borderlands: piedra, estandartes y latón.',
+      },
+      wilderness: {
+        name: 'El Yermo',
+        pitch: 'Wilderness: bosque, pantano y luna sobre el manantial.',
+      },
+      caves: {
+        name: 'Las Cuevas',
+        pitch: 'Caves of Chaos: roca, brasa y la Campana del Caos.',
+      },
+    },
   },
 };
 

@@ -24,6 +24,7 @@ export default async function DashboardLayout({
         <Link href="/dashboard/races">{dict.nav.races}</Link>
         <Link href="/dashboard/classes">{dict.nav.classes}</Link>
         <Link href="/dashboard/account">{dict.nav.account}</Link>
+        <Link href="/dashboard/theme">{dict.nav.theme}</Link>
         <Link href="/design">{dict.common.design}</Link>
         <LocaleSwitcher
           locale={locale}

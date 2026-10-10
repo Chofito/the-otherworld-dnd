@@ -1,3 +1,5 @@
+import type { DesignThemeId } from '@/config/design-themes';
+
 export type Dictionary = {
   meta: {
     title: string;
@@ -91,6 +93,7 @@ export type Dictionary = {
     races: string;
     classes: string;
     account: string;
+    theme: string;
   };
   dashboard: {
     eyebrow: string;
@@ -240,5 +243,28 @@ export type Dictionary = {
     characterName: string;
     futureArt: string;
     futureArtLabel: string;
+    siteTheme: string;
+    previewing: string;
+    atmosphere: string;
+    mist: string;
+    stars: string;
+    grain: string;
+    glow: string;
+    reset: string;
+    copyTokens: string;
+    copied: string;
+  };
+  theme: {
+    eyebrow: string;
+    title: string;
+    blurb: string;
+    legend: string;
+    apply: string;
+    current: string;
+    labLink: string;
+    updated: string;
+    updateFailed: string;
+    invalid: string;
+    names: Record<DesignThemeId, { name: string; pitch: string }>;
   };
 };

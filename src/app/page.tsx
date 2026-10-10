@@ -1,6 +1,7 @@
-import type { Metadata } from 'next';
 import { ChevronDown } from 'lucide-react';
+import type { Metadata } from 'next';
 import { LocaleSwitcher } from '@/components/locale-switcher';
+import { ThemeEmblem } from '@/components/theme-emblem';
 import { CLUB_ADVENTURES } from '@/config/club-adventures';
 import { getDictionary, getLocale } from '@/i18n/get-dictionary';
 import { buildPublicMetadata } from '@/lib/site-metadata';
@@ -53,8 +54,9 @@ export default async function HomePage() {
           </a>
         </div>
         <div className="hero__doorframe" aria-hidden="true">
-          <div className="hero__door door">
+          <div className="hero__door door door--emblem">
             <span className="sigil" />
+            <ThemeEmblem idPrefix="hero" />
           </div>
           <span className="hero__door-glow" />
         </div>

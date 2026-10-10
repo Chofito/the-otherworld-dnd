@@ -1,0 +1,210 @@
+/* Invite / threshold flow pages. */
+
+/* ------------------------------------------------
+   THRESHOLD - invite flow chrome & the road to the table
+   ------------------------------------------------ */
+.threshold {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.invite-flow {
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 4.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Waymarks - three diamonds on the road; the lit one breathes */
+.waymarks {
+  display: flex;
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+}
+
+.waymarks__item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: default;
+  font: inherit;
+  flex: 1;
+  position: relative;
+  padding: 1.35rem 0 0;
+  text-align: center;
+  font-size: var(--step--2);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+button.waymarks__item {
+  cursor: pointer;
+}
+
+button.waymarks__item:hover {
+  color: var(--highlight);
+}
+
+.waymarks__item.is-locked {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.waymarks__item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 0.6rem;
+  height: 0.6rem;
+  border: 1px solid var(--border);
+  background: var(--ink-deep);
+  z-index: 1;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.waymarks__item + .waymarks__item::after {
+  content: "";
+  position: absolute;
+  top: 0.3rem;
+  right: 50%;
+  width: calc(100% - 1.2rem);
+  transform: translateX(-0.6rem);
+  height: 1px;
+  background: var(--line);
+}
+
+.waymarks__item.is-active {
+  color: var(--highlight);
+}
+
+.waymarks__item.is-active::before {
+  border-color: var(--highlight);
+  background: color-mix(in srgb, var(--highlight) 35%, var(--ink-deep));
+  animation: waymark-breathe 2.8s ease-in-out infinite;
+}
+
+@keyframes waymark-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 6px color-mix(in srgb, var(--highlight) 35%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 16px color-mix(in srgb, var(--highlight) 65%, transparent);
+  }
+}
+
+/* The summons - the campaign read aloud, not boxed */
+.summons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.summons__title {
+  font-size: clamp(2rem, 6vw, 2.8rem);
+}
+
+.summons__lede {
+  color: color-mix(in srgb, var(--foreground) 82%, var(--muted));
+  max-width: 56ch;
+  white-space: pre-wrap;
+}
+
+.summons__rules {
+  border-left: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.summons__rules h2 {
+  font-size: var(--step-2);
+}
+
+.summons__rules p {
+  white-space: pre-wrap;
+  color: color-mix(in srgb, var(--foreground) 82%, var(--muted));
+}
+
+.summons__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+/* The plaque - permanent character sheet, portrait in its door */
+.plaque {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 0 0.5rem;
+  text-align: center;
+  animation: rise 0.9s ease 0.1s both;
+}
+
+.plaque__door {
+  width: min(58vw, 13.5rem);
+  aspect-ratio: 5 / 8;
+}
+
+.plaque__name {
+  font-size: clamp(2rem, 6vw, 2.7rem);
+}
+
+.plaque__lineage {
+  font-size: var(--step--1);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--highlight);
+}
+
+.plaque__oath {
+  max-width: 44ch;
+  color: color-mix(in srgb, var(--foreground) 85%, var(--muted));
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-style: italic;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.plaque__oath strong {
+  display: block;
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: var(--step--2);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+.plaque__campaign {
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+
+.avatar-preview-sm {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--highlight) 35%, transparent);
+}

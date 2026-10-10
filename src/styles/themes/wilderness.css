@@ -1,0 +1,205 @@
+/* Theme: The Wilderness (Wilderness booklet).
+   Tamarack woods, fens, mist and the moon over the Sacred Spring.
+   The door becomes a moonlit clearing; cards grow leaf corners;
+   states are trail stones; dividers are dotted trails. */
+
+[data-theme="wilderness"] {
+  color-scheme: dark;
+
+  --background: #08100d;
+  --ink-deep: #040806;
+  --surface: #0f1a15;
+  --surface-elevated: #15241d;
+  --foreground: #e6efe4;
+  --muted: #9db0a2;
+  --border: #2b4337;
+  --accent: #7cb784;
+  --accent-fg: #06120b;
+  --accent-text: #9fd3a6;
+  --highlight: #e8cf6a;
+  --ember: #4f8f9a;
+  --danger: #f08a7a;
+  --ok: #7fd88a;
+  --moon: #dfe8ea;
+  --fen: #4f8f9a;
+
+  --star-rgb: 223 232 234;
+  --star-warm-rgb: 232 207 106;
+  --shadow-rgb: 2 6 4;
+  --title-from: #f4f9f2;
+  --title-mid: #d3e9d6;
+  --title-to: #9fd3a6;
+
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-body:
+    var(--font-alegreya-sans), "Alegreya Sans", system-ui, sans-serif;
+  --display-style: italic;
+  --display-transform: none;
+  --display-tracking: 0.01em;
+
+  --radius: 0.75rem;
+  --leaf: 1.35rem 0.35rem 1.35rem 0.35rem;
+  --arch:
+    48% 52% var(--radius) var(--radius) / 40% 44% var(--radius) var(--radius);
+
+  --emblem-wilderness: block;
+}
+
+/* -- Door: an overgrown clearing, moon-mist inside -- */
+[data-theme="wilderness"] .door {
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+  background:
+    radial-gradient(
+      70% 45% at 50% 20%,
+      color-mix(in srgb, var(--moon) calc(12% * var(--glow)), transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      120% 70% at 50% 110%,
+      color-mix(in srgb, var(--fen) 22%, transparent),
+      transparent 65%
+    ),
+    color-mix(in srgb, var(--ink-deep) 75%, transparent);
+  box-shadow:
+    0 0 40px color-mix(in srgb, var(--fen) 16%, transparent),
+    inset 0 0 50px rgb(var(--shadow-rgb) / 50%);
+}
+
+[data-theme="wilderness"] .door::before {
+  border: 1px dashed color-mix(in srgb, var(--highlight) 28%, transparent);
+}
+
+[data-theme="wilderness"] .door::after {
+  background:
+    radial-gradient(
+      50% 28% at 30% 70%,
+      color-mix(in srgb, var(--moon) 12%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      45% 30% at 70% 45%,
+      color-mix(in srgb, var(--fen) 20%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      40% 24% at 50% 90%,
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      transparent 70%
+    );
+}
+
+/* -- Cards: leaf-cut corners with a sprig of vine -- */
+[data-theme="wilderness"] :is(.card, .panel, .adventure-card, .ledger__card) {
+  border: 1px solid var(--border);
+  border-radius: var(--leaf);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--surface-elevated) 90%, transparent),
+    color-mix(in srgb, var(--surface) 92%, transparent) 60%,
+    color-mix(in srgb, var(--ink-deep) 75%, transparent)
+  );
+}
+
+[data-theme="wilderness"] :is(.card, .panel, .adventure-card, .ledger__card) {
+  position: relative;
+}
+
+[data-theme="wilderness"] :is(.card, .panel, .adventure-card)::before,
+[data-theme="wilderness"] .ledger__card::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -0.6rem;
+  left: -0.5rem;
+  width: 3.4rem;
+  height: 2.4rem;
+  border: 0;
+  background: var(--accent);
+  opacity: 0.85;
+  pointer-events: none;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 40'%3E%3Cpath d='M6 36C8 20 18 10 36 6' fill='none' stroke='black' stroke-width='1.6'/%3E%3Cpath d='M14 22c-6-2-8-8-6-12 6 1 9 6 6 12ZM24 12c0-6 4-10 9-10 1 5-3 10-9 10ZM36 6c4-4 10-4 14-1-4 4-10 4-14 1Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+[data-theme="wilderness"] :is(.card, .panel)::after {
+  display: none;
+}
+
+[data-theme="wilderness"] .ledger__card:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+}
+
+/* -- Buttons: smooth river stones -- */
+[data-theme="wilderness"] .btn {
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 88%, #fff),
+    color-mix(in srgb, var(--accent) 88%, #000)
+  );
+  border-color: color-mix(in srgb, var(--accent) 60%, #fff);
+}
+
+[data-theme="wilderness"] :is(.btn-secondary, .btn-danger) {
+  border-radius: 999px;
+}
+
+/* -- States: trail-marker stones -- */
+[data-theme="wilderness"] :is(.badge, .adventure-card__status) {
+  border-radius: 55% 45% 50% 50% / 60% 55% 45% 40%;
+  padding: 0.2rem 0.75rem;
+}
+
+[data-theme="wilderness"] .adventure-card__status {
+  align-self: flex-start;
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent-text);
+}
+
+/* -- Sigil: a crescent moon -- */
+[data-theme="wilderness"] .sigil {
+  width: 0.7rem;
+  height: 0.7rem;
+  transform: none;
+  border: 0;
+  background: var(--moon);
+  box-shadow: none;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--moon) 60%, transparent));
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15 2a10 10 0 1 0 7 17A8 8 0 0 1 15 2Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+/* -- Dividers: a dotted trail -- */
+[data-theme="wilderness"] .ornament::before,
+[data-theme="wilderness"] .ornament::after {
+  height: 0.3rem;
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent) 70%, transparent) 0 1.3px,
+      transparent 1.8px
+    )
+    center / 0.6rem 0.3rem repeat-x;
+}
+
+/* -- Home -- */
+[data-theme="wilderness"] .chronicle::before {
+  width: 0;
+  border-left: 2px dotted color-mix(in srgb, var(--accent) 45%, transparent);
+  background: none;
+}
+
+[data-theme="wilderness"] .chapter__numeral {
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--accent) 65%, transparent);
+}
+
+/* Desktop only: on mobile the lede is centered without a rule */
+@media (min-width: 861px) {
+  [data-theme="wilderness"] .hero__lede {
+    border-left-style: dotted;
+    border-left-width: 2px;
+  }
+}

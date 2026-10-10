@@ -1,91 +1,101 @@
-export type DesignThemeId = 'crimson' | 'arcane' | 'azure';
+/**
+ * Visual themes. The DM picks one for the whole site (`site_settings.theme`);
+ * the server stamps it on `<html data-theme>` and CSS does the rest.
+ *
+ * Tokens + skin for each theme live in `src/styles/themes/<id>.css`.
+ * `swatches` mirror a few of those tokens for pickers and the /design lab;
+ * `design-themes.test.ts` fails if they drift from the CSS.
+ */
+export const DESIGN_THEME_IDS = [
+  'arcane',
+  'keep',
+  'wilderness',
+  'caves',
+] as const;
 
-export type DesignTheme = {
-  id: DesignThemeId;
-  label: string;
-  pitch: string;
-  displayFont: string;
-  bodyFont: string;
-  license: string;
-  colors: {
-    background: string;
-    surface: string;
-    foreground: string;
-    muted: string;
-    border: string;
-    accent: string;
-    accentFg: string;
-    highlight: string;
-    danger: string;
-    ok: string;
-  };
-};
+export type DesignThemeId = (typeof DESIGN_THEME_IDS)[number];
 
 export const DEFAULT_THEME_ID: DesignThemeId = 'arcane';
 
+export type DesignThemeSwatches = {
+  background: string;
+  surface: string;
+  foreground: string;
+  accent: string;
+  highlight: string;
+};
+
+export type DesignTheme = {
+  id: DesignThemeId;
+  /** Heroes of the Borderlands booklet the theme evokes, if any. */
+  booklet: string | null;
+  displayFont: string;
+  bodyFont: string;
+  swatches: DesignThemeSwatches;
+};
+
 export const DESIGN_THEMES: DesignTheme[] = [
   {
-    id: 'crimson',
-    label: 'Crimson Banner',
-    pitch: 'Menú tipo D&D Beyond: ink navy, CTA rojo, oro.',
-    displayFont: 'Cinzel',
-    bodyFont: 'Source Sans 3',
-    license: 'SIL OFL (Google Fonts)',
-    colors: {
-      background: '#0B0E14',
-      surface: '#151A24',
-      foreground: '#F4F1EA',
-      muted: '#9AA3B5',
-      border: '#2A3344',
-      accent: '#C41E3A',
-      accentFg: '#F4F1EA',
-      highlight: '#E0B84A',
-      danger: '#FF6B5A',
-      ok: '#3DDC97',
-    },
-  },
-  {
     id: 'arcane',
-    label: 'Arcane Violet',
-    pitch: 'Spellbook / menú arcano: violeta + ámbar.',
+    booklet: null,
     displayFont: 'Cormorant Garamond',
     bodyFont: 'Nunito Sans',
-    license: 'SIL OFL (Google Fonts)',
-    colors: {
-      background: '#100E18',
-      surface: '#1A1626',
-      foreground: '#F0EBF8',
-      muted: '#A69BB8',
-      border: '#322A45',
-      accent: '#8B5CF6',
-      accentFg: '#F0EBF8',
-      highlight: '#F59E0B',
-      danger: '#F07178',
-      ok: '#34D399',
+    swatches: {
+      background: '#0c0a14',
+      surface: '#161225',
+      foreground: '#f1ecf9',
+      accent: '#6d45d8',
+      highlight: '#f0a93e',
     },
   },
   {
-    id: 'azure',
-    label: 'Azure Ember',
-    pitch: 'Menú de mapa: azul profundo + naranja.',
-    displayFont: 'Marcellus',
-    bodyFont: 'IBM Plex Sans',
-    license: 'SIL OFL (Google Fonts)',
-    colors: {
-      background: '#070B12',
-      surface: '#101826',
-      foreground: '#E8EEF7',
-      muted: '#8B9BB0',
-      border: '#1E2A3C',
-      accent: '#3B82F6',
-      accentFg: '#E8EEF7',
-      highlight: '#FB923C',
-      danger: '#F87171',
-      ok: '#4ADE80',
+    id: 'keep',
+    booklet: 'Keep on the Borderlands',
+    displayFont: 'Cinzel',
+    bodyFont: 'Alegreya Sans',
+    swatches: {
+      background: '#14110f',
+      surface: '#1f1a17',
+      foreground: '#f2e6d0',
+      accent: '#a3262f',
+      highlight: '#e0a943',
+    },
+  },
+  {
+    id: 'wilderness',
+    booklet: 'Wilderness',
+    displayFont: 'Cormorant Garamond',
+    bodyFont: 'Alegreya Sans',
+    swatches: {
+      background: '#08100d',
+      surface: '#0f1a15',
+      foreground: '#e6efe4',
+      accent: '#7cb784',
+      highlight: '#e8cf6a',
+    },
+  },
+  {
+    id: 'caves',
+    booklet: 'Caves of Chaos',
+    displayFont: 'Grenze Gotisch',
+    bodyFont: 'Nunito Sans',
+    swatches: {
+      background: '#0e0c0b',
+      surface: '#191614',
+      foreground: '#ece4d6',
+      accent: '#d8692a',
+      highlight: '#d9a23e',
     },
   },
 ];
 
+export function isDesignThemeId(value: unknown): value is DesignThemeId {
+  return (
+    typeof value === 'string' &&
+    (DESIGN_THEME_IDS as readonly string[]).includes(value)
+  );
+}
+
 export function getDesignTheme(id: DesignThemeId): DesignTheme {
-  return DESIGN_THEMES.find((t) => t.id === id) ?? DESIGN_THEMES[1];
+  return DESIGN_THEMES.find((t) => t.id === id) ?? DESIGN_THEMES[0];
 }

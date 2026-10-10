@@ -1,0 +1,38 @@
+/* Theme: The Otherworld (arcane). The base brand and the default.
+   Its skin is the base stylesheet itself: the door, corner ticks, diamond sigil. */
+
+:root,
+[data-theme="arcane"] {
+  color-scheme: dark;
+
+  --background: #0c0a14;
+  --ink-deep: #07060d;
+  --surface: #161225;
+  --surface-elevated: #1f1934;
+  --foreground: #f1ecf9;
+  --muted: #ada2c4;
+  --border: #41355e;
+  --accent: #6d45d8;
+  --accent-fg: #ffffff;
+  --accent-text: #b39cff;
+  --highlight: #f0a93e;
+  --ember: #e07a2a;
+  --danger: #f2788a;
+  --ok: #4fd1a1;
+
+  --star-rgb: 240 235 248;
+  --star-warm-rgb: 240 169 62;
+  --shadow-rgb: 4 2 10;
+  --title-from: #f7f2ff;
+  --title-mid: #d8c8f4;
+  --title-to: #a98bff;
+
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-body: var(--font-nunito), "Nunito Sans", system-ui, sans-serif;
+  --display-style: italic;
+  --display-transform: none;
+  --display-tracking: 0.015em;
+
+  --radius: 0.4rem;
+  --arch: 100rem 100rem var(--radius) var(--radius);
+}

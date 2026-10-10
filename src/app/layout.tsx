@@ -1,33 +1,23 @@
 import type { Metadata } from 'next';
 import {
+  Alegreya_Sans,
   Cinzel,
   Cormorant_Garamond,
-  IBM_Plex_Sans,
-  Marcellus,
+  Grenze_Gotisch,
   Nunito_Sans,
-  Source_Sans_3,
 } from 'next/font/google';
-import { DEFAULT_THEME_ID } from '@/config/design-themes';
 import { getDictionary, getLocale } from '@/i18n/get-dictionary';
 import { buildPublicMetadata } from '@/lib/site-metadata';
+import { getSiteThemeId } from '@/lib/site-theme';
 import './globals.css';
 
-const cinzel = Cinzel({
-  variable: '--font-cinzel',
-  subsets: ['latin'],
-  display: 'swap',
-});
-
-const sourceSans = Source_Sans_3({
-  variable: '--font-source-sans',
-  subsets: ['latin'],
-  display: 'swap',
-});
-
+// Base theme (arcane) fonts are preloaded. Theme-only fonts load on demand:
+// the browser fetches a face only when the active theme's CSS uses it.
 const cormorant = Cormorant_Garamond({
   variable: '--font-cormorant',
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   display: 'swap',
 });
 
@@ -37,18 +27,26 @@ const nunito = Nunito_Sans({
   display: 'swap',
 });
 
-const marcellus = Marcellus({
-  variable: '--font-marcellus',
+const cinzel = Cinzel({
+  variable: '--font-cinzel',
   subsets: ['latin'],
-  weight: '400',
   display: 'swap',
+  preload: false,
 });
 
-const ibmPlex = IBM_Plex_Sans({
-  variable: '--font-ibm-plex',
+const alegreyaSans = Alegreya_Sans({
+  variable: '--font-alegreya-sans',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '700'],
   display: 'swap',
+  preload: false,
+});
+
+const grenze = Grenze_Gotisch({
+  variable: '--font-grenze',
+  subsets: ['latin'],
+  display: 'swap',
+  preload: false,
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -61,13 +59,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
-  const locale = await getLocale();
+  const [locale, themeId] = await Promise.all([getLocale(), getSiteThemeId()]);
 
   return (
     <html
       lang={locale}
-      data-theme={DEFAULT_THEME_ID}
-      className={`${cinzel.variable} ${sourceSans.variable} ${cormorant.variable} ${nunito.variable} ${marcellus.variable} ${ibmPlex.variable} h-full antialiased`}
+      data-theme={themeId}
+      data-site-theme={themeId}
+      className={`${cormorant.variable} ${nunito.variable} ${cinzel.variable} ${alegreyaSans.variable} ${grenze.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

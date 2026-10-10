@@ -86,8 +86,7 @@ const en: Dictionary = {
   auth: {
     eyebrow: 'Restricted gate',
     title: 'Summon DM',
-    subtitle:
-      'The Otherworld: only the dungeon master crosses this threshold.',
+    subtitle: 'The Otherworld: only the dungeon master crosses this threshold.',
     submit: 'Enter the keep',
     invalid: 'Invalid email or password.',
   },
@@ -96,6 +95,7 @@ const en: Dictionary = {
     races: 'Races',
     classes: 'Classes',
     account: 'Account',
+    theme: 'Theme',
   },
   dashboard: {
     eyebrow: 'DM dashboard',
@@ -141,7 +141,8 @@ const en: Dictionary = {
     deleteCampaign: 'Delete campaign',
     settings: 'Campaign settings',
     publicPage: 'Public page',
-    publicPageHint: 'Public roster (no emails). Share this link with the table.',
+    publicPageHint:
+      'Public roster (no emails). Share this link with the table.',
     invites: 'Invites',
     characters: 'Characters',
     createInvite: 'Create invite',
@@ -236,7 +237,8 @@ const en: Dictionary = {
   design: {
     eyebrow: 'Style lab',
     title: 'Design',
-    intro: 'Three dark-only directions. Active default: Arcane Violet.',
+    intro:
+      'Preview every theme without changing the site. Leaving restores the active theme.',
     backDashboard: 'Back to dashboard',
     palette: 'Palette',
     typography: 'Typography',
@@ -250,6 +252,47 @@ const en: Dictionary = {
     characterName: 'Character name',
     futureArt: 'Future art contrast',
     futureArtLabel: 'Future art',
+    siteTheme: 'Active site theme',
+    previewing: 'Previewing',
+    atmosphere: 'Atmosphere',
+    mist: 'Mist',
+    stars: 'Stars',
+    grain: 'Grain',
+    glow: 'Candle',
+    reset: 'Reset',
+    copyTokens: 'Copy tokens',
+    copied: 'Copied',
+  },
+  theme: {
+    eyebrow: 'DM panel',
+    title: 'Site theme',
+    blurb:
+      'Everyone sees the theme you pick here: home, invites, the public campaign page and your panel.',
+    legend: 'Pick a theme',
+    apply: 'Apply theme',
+    current: 'Active',
+    labLink: 'Try themes in the style lab',
+    updated: 'Theme updated. Everyone sees it now.',
+    updateFailed: 'Could not change the theme.',
+    invalid: 'Invalid theme.',
+    names: {
+      arcane: {
+        name: 'The Otherworld',
+        pitch: 'The base brand: arcane night, violet and candlelight.',
+      },
+      keep: {
+        name: 'The Keep',
+        pitch: 'Keep on the Borderlands: stone, banners and brass.',
+      },
+      wilderness: {
+        name: 'The Wilderness',
+        pitch: 'Wilderness: woods, fens and the moon over the spring.',
+      },
+      caves: {
+        name: 'The Caves',
+        pitch: 'Caves of Chaos: rock, embers and the Chaos Bell.',
+      },
+    },
   },
 };
 

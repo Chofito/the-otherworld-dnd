@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { isAvatarId } from '@/config/avatars';
+import { DESIGN_THEME_IDS } from '@/config/design-themes';
 
 export const campaignStatusSchema = z.enum(['open', 'ongoing', 'completed']);
 
@@ -77,4 +78,8 @@ export const profileFormSchema = z.object({
 export const loginSchema = z.object({
   email: z.email().max(254),
   password: z.string().min(6).max(128),
+});
+
+export const siteThemeFormSchema = z.object({
+  theme: z.enum(DESIGN_THEME_IDS),
 });

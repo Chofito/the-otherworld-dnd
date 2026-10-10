@@ -1,0 +1,208 @@
+/* Design lab page. */
+
+/* -- Design lab -- */
+.design-lab {
+  display: grid;
+  grid-template-columns: minmax(14rem, 18rem) 1fr;
+  min-height: 100vh;
+}
+
+@media (max-width: 800px) {
+  .design-lab {
+    grid-template-columns: 1fr;
+  }
+}
+
+.design-lab__sidebar {
+  padding: 1.25rem 1rem;
+  border-right: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.design-lab__sidebar h1 {
+  font-size: var(--step-2);
+  color: var(--highlight);
+}
+
+.design-lab__theme {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+  padding: 0.75rem 0.85rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+.design-lab__theme.is-active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.design-lab__theme strong {
+  display: block;
+  font-family: var(--font-display);
+  margin-bottom: 0.2rem;
+}
+
+.design-lab__theme span {
+  display: block;
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+
+.design-lab__main {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.design-lab__swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.65rem;
+}
+
+.design-lab__swatch {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.design-lab__swatch-chip {
+  height: 3.25rem;
+}
+
+.design-lab__swatch figcaption {
+  padding: 0.45rem 0.55rem;
+  font-size: var(--step--2);
+}
+
+.design-lab__swatch code {
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: var(--muted);
+}
+
+.design-lab__art-slot {
+  min-height: 10rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      color-mix(in srgb, var(--highlight) 10%, transparent)
+    ),
+    var(--background);
+  font-size: var(--step-0);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.design-lab__site {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-style: normal;
+  font-size: var(--step--3);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--highlight);
+}
+
+/* Atmosphere knobs */
+.design-lab__knobs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--ink-deep) 60%, transparent);
+}
+
+.design-lab__knobs-title {
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.design-lab__knob {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr 2.6rem;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--step--1);
+}
+
+.design-lab__knob input {
+  width: 100%;
+  accent-color: var(--highlight);
+}
+
+.design-lab__knob output {
+  font-family: ui-monospace, monospace;
+  font-size: var(--step--2);
+  color: var(--highlight);
+  text-align: right;
+}
+
+/* Hero-like stage: the theme's doorway beside its type */
+.design-lab__stage {
+  display: grid;
+  grid-template-columns: minmax(9rem, 13rem) 1fr;
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.design-lab__door {
+  width: 100%;
+  aspect-ratio: 5 / 8;
+  display: grid;
+  place-items: center;
+}
+
+.design-lab__door .sigil {
+  position: relative;
+  z-index: 1;
+}
+
+.design-lab__brand {
+  margin: 0;
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  line-height: 0.95;
+}
+
+.design-lab__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 560px) {
+  .design-lab__stage {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .design-lab__door {
+    width: min(60vw, 12rem);
+  }
+}

@@ -1,11 +1,12 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { requireUser } from '@/lib/auth';
 import { rateLimit } from '@/lib/rate-limit';
 import { getClientIp } from '@/lib/request-ip';
+import { SITE_THEME_TAG } from '@/lib/site-theme';
 import { createCampaignPublicSlug, createInviteSlug } from '@/lib/slug';
 import { createClient, createLoginClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service';
@@ -16,6 +17,7 @@ import {
   inviteTtlSchema,
   loginSchema,
   profileFormSchema,
+  siteThemeFormSchema,
 } from '@/lib/validations';
 
 function formDataToObject(formData: FormData) {
@@ -80,6 +82,33 @@ export async function updateProfileAction(
   }
 
   return { success: dict.errors.profileUpdated };
+}
+
+export async function updateSiteThemeAction(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const dict = await getDictionary();
+  const { supabase, userId } = await requireUser();
+  const parsed = siteThemeFormSchema.safeParse(formDataToObject(formData));
+  if (!parsed.success) {
+    return { error: dict.theme.invalid };
+  }
+
+  const { error } = await supabase
+    .from('site_settings')
+    .update({ theme: parsed.data.theme, updated_by: userId })
+    .eq('id', true)
+    .select('theme')
+    .single();
+
+  if (error) {
+    return { error: dict.theme.updateFailed };
+  }
+
+  updateTag(SITE_THEME_TAG);
+  revalidatePath('/', 'layout');
+  return { success: dict.theme.updated };
 }
 
 export async function createCampaignAction(

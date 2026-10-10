@@ -1,0 +1,52 @@
+/* Token contract. Every theme in src/styles/themes/ must define:
+   palette    --background --ink-deep --surface --surface-elevated
+              --foreground --muted --border --accent --accent-fg
+              --accent-text --highlight --ember --danger --ok
+   light      --star-rgb --star-warm-rgb --shadow-rgb --title-from
+              --title-mid --title-to
+   type       --font-display --font-body --display-style
+              --display-transform --display-tracking
+   shape      --radius --arch
+   Optional overrides: anything in the block below. */
+
+/* -- Derived tokens + atmosphere knobs --
+   Declared on every [data-theme] so nested previews (theme picker)
+   recompute them from their own palette. */
+:root,
+[data-theme] {
+  --line: color-mix(in srgb, var(--border) 70%, transparent);
+  --line-strong: color-mix(in srgb, var(--accent) 40%, var(--border));
+  --border-strong: color-mix(in srgb, var(--foreground) 22%, var(--border));
+  --ring: color-mix(in srgb, var(--highlight) 45%, transparent);
+  --shadow: 0 18px 50px rgb(var(--shadow-rgb) / 55%);
+  --backdrop: rgb(var(--shadow-rgb) / 78%);
+  --vignette: rgb(var(--shadow-rgb) / 55%);
+
+  /* Atmosphere knobs: 0 = off, 1 = designed look. Tuned live in /design. */
+  --mist: 1;
+  --stars: 1;
+  --grain: 1;
+  --glow: 1;
+
+  /* Which doorway art the hero shows (see theme-emblem.tsx). */
+  --emblem-keep: none;
+  --emblem-wilderness: none;
+  --emblem-caves: none;
+}
+
+/* -- Scale tokens (theme-independent): type steps, tracking, weight -- */
+:root {
+  --step--3: 0.66rem;
+  --step--2: 0.72rem;
+  --step--1: 0.82rem;
+  --step-0: 0.95rem;
+  --step-1: 1.1rem;
+  --step-2: 1.3rem;
+  --step-3: 1.45rem;
+
+  --track-label: 0.12em;
+  --track-wide: 0.18em;
+  --track-widest: 0.22em;
+
+  --weight-strong: 700;
+}
